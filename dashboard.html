@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AI Implementation Manager</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .dashboard { padding: var(--space-xl) 0; }
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-xl);
+    }
+
+    .dashboard-header h2 {
+      margin: 0;
+    }
+
+    .user-email {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .stat-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--color-text);
+    }
+
+    .stat-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Projects Grid ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .project-card {
+      cursor: pointer;
+    }
+
+    .project-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+    }
+
+    .project-card h4 {
+      margin-bottom: 4px;
+    }
+
+    .project-client {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .project-phases {
+      display: flex;
+      gap: 4px;
+      margin-top: var(--space-md);
+    }
+
+    .phase-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-border);
+    }
+
+    .phase-dot.done { background: var(--color-success); }
+    .phase-dot.active { background: var(--color-primary); animation: pulse 2s ease infinite; }
+
+    /* ── New Project Card ── */
+    .new-project-card {
+      border: 2px dashed var(--color-border);
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .new-project-card:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+
+    .new-project-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--color-primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow-xl);
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal h3 { margin-bottom: var(--space-sm); }
+    .modal .text-secondary { margin-bottom: var(--space-lg); }
+
+    .modal-actions {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: flex-end;
+      margin-top: var(--space-lg);
+    }
+
+    /* ── API Key Setup ── */
+    .api-key-banner {
+      background: var(--color-warning-light);
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .api-key-banner.hidden { display: none; }
+
+    .api-key-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .stats-bar { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .dashboard-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ═══ APP HEADER ═══ -->
+  <header class="app-header">
+    <div class="container">
+      <a href="dashboard.html" class="app-logo">
+        <div class="app-logo-icon">⚡</div>
+        AIM
+      </a>
+      <div class="app-nav">
+        <span class="text-muted text-small" id="user-display"></span>
+        <button class="btn btn-ghost btn-sm" onclick="openSettings()">⚙️ Settings</button>
+        <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <main class="dashboard page-enter">
+    <div class="container">
+      <!-- API Key Banner -->
+      <div class="api-key-banner" id="api-key-banner">
+        <div class="api-key-icon">🔑</div>
+        <div style="flex:1">
+          <strong>Set up your AI API key</strong>
+          <p class="text-small text-secondary" style="margin:4px 0 0">
+            To generate implementation plans, you need a Claude API key.
+            Your key is stored locally in your browser — never sent to our servers.
+          </p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="openSettings()">Add API Key</button>
+      </div>
+
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div>
+          <h2 id="greeting">Your Projects</h2>
+          <div class="user-email" id="user-email"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openNewProject()">
+          + New Implementation
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-active">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-complete">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+
+      <!-- Projects -->
+      <div class="projects-grid" id="projects-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ NEW PROJECT MODAL ═══ -->
+  <div class="modal-overlay" id="modal-new-project">
+    <div class="modal">
+      <h3>New Implementation Project</h3>
+      <p class="text-secondary text-small">Enter the client details to start building an AI-powered implementation plan.</p>
+
+      <form id="form-new-project" onsubmit="createProject(event)">
+        <div class="form-group">
+          <label class="form-label" for="project-name">Project Name</label>
+          <input type="text" id="project-name" class="form-input" placeholder="e.g., Acme Corp — Platform Implementation" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="client-name">Client Company Name</label>
+          <input type="text" id="client-name" class="form-input" placeholder="e.g., Acme Corporation" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="client-url">Client Website URL</label>
+          <input type="url" id="client-url" class="form-input" placeholder="https://www.acme.com">
+          <div class="form-hint">AI will research this company from publicly available information.</div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-new-project')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-create">
+            Create & Start Research →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ SETTINGS MODAL ═══ -->
+  <div class="modal-overlay" id="modal-settings">
+    <div class="modal">
+      <h3>Settings</h3>
+      <p class="text-secondary text-small">Configure your AI API key. It's stored locally in your browser only.</p>
+
+      <form onsubmit="saveSettings(event)">
+        <div class="form-group">
+          <label class="form-label" for="api-key">Claude API Key</label>
+          <input type="password" id="api-key" class="form-input" placeholder="sk-ant-...">
+          <div class="form-hint">
+            Get your key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a>. 
+            Stored in your browser's localStorage — never sent to our servers.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ai-model">AI Model</label>
+          <select id="ai-model" class="form-select">
+            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fast & Affordable)</option>
+            <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (Best Quality)</option>
+          </select>
+          <div class="form-hint">Haiku is recommended for most use cases. Sonnet gives higher quality at higher cost.</div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-settings')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
