@@ -7,17 +7,28 @@
 const SUPABASE_URL = 'https://adsjiigutipfrnvdgrwx.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_-I7rBj-UJCVkwivJAnGy7g_5LsvFMvk';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ── Initialize client only once (prevents duplicate declaration errors) ──
+if (!window._supabaseClient) {
+  window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  });
+}
+
+const supabaseClient = window._supabaseClient;
 
 // ── Auth Helpers ──
 
 async function getUser() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabaseClient.auth.getUser();
   return user;
 }
 
 async function getSession() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   return session;
 }
 
@@ -31,7 +42,7 @@ async function requireAuth() {
 }
 
 async function signOut() {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location.href = 'index.html';
 }
 
@@ -40,8 +51,8 @@ async function signOut() {
 async function logAction(action, entityType, entityId, metadata = {}) {
   const user = await getUser();
   if (!user) return;
-  
-  await supabase.from('audit_log').insert({
+
+  await supabaseClient.from('audit_log').insert({
     user_id: user.id,
     action,
     entity_type: entityType,

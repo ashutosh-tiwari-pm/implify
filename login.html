@@ -287,7 +287,7 @@
     checkSession();
 
     async function checkSession() {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
         window.location.href = 'dashboard.html';
       }
@@ -314,7 +314,7 @@
     }
 
     async function signInWithGoogle() {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: window.location.origin + '/dashboard.html'
@@ -334,7 +334,7 @@
 
       try {
         if (isSignUp) {
-          const { data, error } = await supabase.auth.signUp({ email, password });
+          const { data, error } = await supabaseClient.auth.signUp({ email, password });
           if (error) throw error;
           if (data.user && !data.session) {
             showSuccess('Account created! Check your email to confirm, then sign in.');
@@ -344,7 +344,7 @@
             window.location.href = 'dashboard.html';
           }
         } else {
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
           if (error) throw error;
           window.location.href = 'dashboard.html';
         }

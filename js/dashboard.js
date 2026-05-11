@@ -43,7 +43,7 @@ function checkApiKey() {
 
 // ── Load Projects ──
 async function loadProjects() {
-  const { data: projects, error } = await supabase
+  const { data: projects, error } = await supabaseClient
     .from('projects')
     .select('*')
     .eq('user_id', currentUser.id)
@@ -140,7 +140,7 @@ async function createProject(e) {
   const clientUrl = document.getElementById('client-url').value.trim();
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('projects')
       .insert({
         user_id: currentUser.id,
