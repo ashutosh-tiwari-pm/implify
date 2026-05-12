@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Settings — AI Implementation Manager</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-xl);
+      padding: var(--space-xl) 0 var(--space-3xl);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── Sidebar ── */
+    .settings-sidebar {
+      position: sticky;
+      top: 80px;
+      height: fit-content;
+    }
+
+    .settings-nav {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-bottom: 1px solid var(--color-border-light);
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .settings-nav-item:last-child { border-bottom: none; }
+
+    .settings-nav-item:hover {
+      background: var(--color-surface-hover);
+      color: var(--color-text);
+    }
+
+    .settings-nav-item.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .settings-nav-item.danger {
+      color: var(--color-danger);
+    }
+
+    .settings-nav-item.danger:hover {
+      background: var(--color-danger-light);
+    }
+
+    .settings-nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    /* ── Main Content ── */
+    .settings-main { min-width: 0; }
+
+    .settings-section {
+      display: none;
+    }
+
+    .settings-section.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .settings-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+    }
+
+    .settings-card-title {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 4px;
+    }
+
+    .settings-card-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-xl);
+    }
+
+    .settings-divider {
+      height: 1px;
+      background: var(--color-border-light);
+      margin: var(--space-xl) 0;
+    }
+
+    /* ── Avatar Section ── */
+    .avatar-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      flex-shrink: 0;
+    }
+
+    .avatar-img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--color-border);
+    }
+
+    .avatar-placeholder {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: white;
+      border: 3px solid var(--color-border);
+    }
+
+    .avatar-upload-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 30px;
+      height: 30px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.875rem;
+      border: 2px solid white;
+      transition: all var(--transition-fast);
+    }
+
+    .avatar-upload-btn:hover {
+      background: var(--color-primary-hover);
+      transform: scale(1.1);
+    }
+
+    #avatar-input { display: none; }
+
+    .avatar-info h4 { margin-bottom: 4px; }
+    .avatar-info p { font-size: 0.875rem; color: var(--color-text-muted); margin: 0 0 var(--space-md); }
+
+    /* ── Form Grid ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+
+    .form-grid .form-group-full {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Danger Zone ── */
+    .danger-zone {
+      border: 1px solid var(--color-danger);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      background: var(--color-danger-light);
+    }
+
+    .danger-zone-title {
+      font-weight: 700;
+      color: var(--color-danger);
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .danger-zone-desc {
+      font-size: 0.875rem;
+      color: var(--color-danger);
+      opacity: 0.8;
+      margin-bottom: var(--space-lg);
+    }
+
+    /* ── Account Stats ── */
+    .account-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .account-stat {
+      background: var(--color-surface-hover);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+    }
+
+    .account-stat-value {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--color-text);
+    }
+
+    .account-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Password strength ── */
+    .password-strength {
+      margin-top: var(--space-sm);
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .strength-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: all var(--transition-base);
+      width: 0%;
+    }
+
+    .strength-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Success banner ── */
+    .save-banner {
+      display: none;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-success-light);
+      color: var(--color-success);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: var(--space-md);
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .save-banner.show {
+      display: flex;
+    }
+
+    /* ── Delete confirm modal ── */
+    .delete-confirm {
+      background: var(--color-surface-hover);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-md);
+      display: none;
+    }
+
+    .delete-confirm.show { display: block; }
+
+    @media (max-width: 768px) {
+      .settings-layout { grid-template-columns: 1fr; }
+      .settings-sidebar { position: static; }
+      .settings-nav { display: flex; overflow-x: auto; }
+      .settings-nav-item { border-bottom: none; border-right: 1px solid var(--color-border-light); white-space: nowrap; }
+      .form-grid { grid-template-columns: 1fr; }
+      .account-stats { grid-template-columns: 1fr; }
+      .avatar-section { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ APP HEADER ═══ -->
+  <header class="app-header">
+    <div class="container">
+      <div class="flex items-center gap-md">
+        <a href="dashboard.html" class="app-logo">
+          <div class="app-logo-icon">⚡</div>
+          AIM
+        </a>
+        <span class="text-muted">/</span>
+        <span class="text-secondary text-small">Profile Settings</span>
+      </div>
+      <div class="app-nav">
+        <a href="dashboard.html" class="btn btn-ghost btn-sm">← Back to Dashboard</a>
+        <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ SETTINGS LAYOUT ═══ -->
+  <div class="container">
+    <div class="settings-layout page-enter">
+
+      <!-- Sidebar -->
+      <div class="settings-sidebar">
+        <!-- User card -->
+        <div class="card" style="margin-bottom:var(--space-md); text-align:center; padding:var(--space-lg)">
+          <div id="sidebar-avatar" style="margin: 0 auto var(--space-md)"></div>
+          <div id="sidebar-name" style="font-weight:700; margin-bottom:4px">Loading...</div>
+          <div id="sidebar-email" class="text-small text-muted"></div>
+        </div>
+
+        <nav class="settings-nav">
+          <a class="settings-nav-item active" onclick="showSection('profile', this)">
+            <span class="settings-nav-icon">👤</span> Profile
+          </a>
+          <a class="settings-nav-item" onclick="showSection('account', this)">
+            <span class="settings-nav-icon">⚙️</span> Account
+          </a>
+          <a class="settings-nav-item" onclick="showSection('security', this)">
+            <span class="settings-nav-icon">🔒</span> Security
+          </a>
+          <a class="settings-nav-item" onclick="showSection('api', this)">
+            <span class="settings-nav-icon">🔑</span> API Keys
+          </a>
+          <a class="settings-nav-item danger" onclick="showSection('danger', this)">
+            <span class="settings-nav-icon">⚠️</span> Danger Zone
+          </a>
+        </nav>
+      </div>
+
+      <!-- Main -->
+      <div class="settings-main">
+
+        <!-- ── PROFILE ── -->
+        <div class="settings-section active" id="section-profile">
+          <div class="settings-card">
+            <div class="settings-card-title">Profile Information</div>
+            <div class="settings-card-desc">Update your name, organisation, and profile picture.</div>
+
+            <div class="save-banner" id="profile-banner">✅ Profile updated successfully!</div>
+
+            <!-- Avatar -->
+            <div class="avatar-section">
+              <div class="avatar-wrapper">
+                <div id="profile-avatar"></div>
+                <label for="avatar-input" class="avatar-upload-btn" title="Change photo">📷</label>
+                <input type="file" id="avatar-input" accept="image/*" onchange="uploadAvatar(event)">
+              </div>
+              <div class="avatar-info">
+                <h4>Profile Photo</h4>
+                <p>JPG, PNG or GIF. Max 2MB. Square images work best.</p>
+                <div class="flex gap-sm">
+                  <label for="avatar-input" class="btn btn-secondary btn-sm" style="cursor:pointer">Upload Photo</label>
+                  <button class="btn btn-ghost btn-sm" onclick="removeAvatar()">Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form -->
+            <form onsubmit="saveProfile(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="full-name">Full Name</label>
+                  <input type="text" id="full-name" class="form-input" placeholder="Ashutosh Tiwari">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="job-title">Job Title</label>
+                  <input type="text" id="job-title" class="form-input" placeholder="AI Product Manager">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="organisation">Organisation</label>
+                  <input type="text" id="organisation" class="form-input" placeholder="MyComplianceOffice">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="phone">Phone (optional)</label>
+                  <input type="tel" id="phone" class="form-input" placeholder="+91 80504 01024">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="timezone">Timezone</label>
+                  <select id="timezone" class="form-select">
+                    <option value="Asia/Kolkata">India Standard Time (IST)</option>
+                    <option value="America/New_York">Eastern Time (ET)</option>
+                    <option value="America/Chicago">Central Time (CT)</option>
+                    <option value="America/Denver">Mountain Time (MT)</option>
+                    <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                    <option value="Europe/London">Greenwich Mean Time (GMT)</option>
+                    <option value="Europe/Paris">Central European Time (CET)</option>
+                    <option value="Europe/Berlin">Central European Time (CET)</option>
+                    <option value="Asia/Dubai">Gulf Standard Time (GST)</option>
+                    <option value="Asia/Singapore">Singapore Time (SGT)</option>
+                    <option value="Asia/Tokyo">Japan Standard Time (JST)</option>
+                    <option value="Australia/Sydney">Australian Eastern Time (AEST)</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-top:var(--space-lg)">
+                <button type="submit" class="btn btn-primary" id="btn-save-profile">
+                  Save Profile
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ── ACCOUNT ── -->
+        <div class="settings-section" id="section-account">
+          <div class="settings-card">
+            <div class="settings-card-title">Account Overview</div>
+            <div class="settings-card-desc">Your account details and usage statistics.</div>
+
+            <div class="account-stats" id="account-stats">
+              <div class="account-stat">
+                <div class="account-stat-value" id="stat-projects">—</div>
+                <div class="account-stat-label">Projects</div>
+              </div>
+              <div class="account-stat">
+                <div class="account-stat-value" id="stat-plans">—</div>
+                <div class="account-stat-label">Plans Generated</div>
+              </div>
+              <div class="account-stat">
+                <div class="account-stat-value" id="stat-member-since">—</div>
+                <div class="account-stat-label">Member Since</div>
+              </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-card-title" style="margin-bottom:4px">Email Address</div>
+            <div class="settings-card-desc">Your login email. Contact support to change this.</div>
+            <div class="form-group">
+              <input type="email" id="account-email" class="form-input" disabled style="background:var(--color-surface-hover); cursor:not-allowed">
+              <div class="form-hint">Email cannot be changed from here. Contact support if needed.</div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-card-title" style="margin-bottom:4px">Plan</div>
+            <div class="settings-card-desc">You are on the Free plan — bring your own API key.</div>
+            <div class="flex items-center gap-md">
+              <span class="badge" style="background:var(--color-primary-light); color:var(--color-primary); font-size:0.875rem; padding:6px 16px">✨ Free Plan</span>
+              <span class="text-small text-muted">Unlimited projects · Pay only for Claude API usage</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SECURITY ── -->
+        <div class="settings-section" id="section-security">
+          <div class="settings-card">
+            <div class="settings-card-title">Change Password</div>
+            <div class="settings-card-desc">Choose a strong password with at least 8 characters.</div>
+
+            <div class="save-banner" id="password-banner">✅ Password updated successfully!</div>
+
+            <form onsubmit="changePassword(event)">
+              <div class="form-group">
+                <label class="form-label" for="new-password">New Password</label>
+                <input type="password" id="new-password" class="form-input" placeholder="At least 8 characters"
+                  minlength="8" required oninput="checkPasswordStrength(this.value)">
+                <div class="password-strength">
+                  <div class="strength-bar">
+                    <div class="strength-fill" id="strength-fill"></div>
+                  </div>
+                  <div class="strength-label" id="strength-label">Enter a password</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" class="form-input" placeholder="Repeat your new password" required>
+              </div>
+              <div class="form-error" id="password-error" style="display:none; margin-bottom:var(--space-md)"></div>
+              <button type="submit" class="btn btn-primary" id="btn-change-password">
+                Update Password
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- ── API KEYS ── -->
+        <div class="settings-section" id="section-api">
+          <div class="settings-card">
+            <div class="settings-card-title">Claude API Key</div>
+            <div class="settings-card-desc">
+              Your API key is stored only in your browser's localStorage — never sent to our servers.
+              Get yours from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>.
+            </div>
+
+            <div class="save-banner" id="api-banner">✅ API settings saved!</div>
+
+            <form onsubmit="saveApiSettings(event)">
+              <div class="form-group">
+                <label class="form-label" for="api-key-input">Claude API Key</label>
+                <div class="flex gap-sm">
+                  <input type="password" id="api-key-input" class="form-input" placeholder="sk-ant-...">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleApiKeyVisibility()" id="btn-toggle-key">👁️ Show</button>
+                </div>
+                <div class="form-hint">Stored in your browser only. Cleared if you clear browser data.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="model-select">Preferred Model</label>
+                <select id="model-select" class="form-select">
+                  <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — Fast & Affordable (~$0.01 per plan)</option>
+                  <option value="claude-sonnet-4-6">Claude Sonnet 4.6 — Best Quality (~$0.10 per plan)</option>
+                </select>
+                <div class="form-hint">Haiku is recommended. Sonnet is used automatically for complex phases.</div>
+              </div>
+
+              <!-- API Key Status -->
+              <div id="api-status" style="margin-bottom:var(--space-lg)"></div>
+
+              <div class="flex gap-md">
+                <button type="submit" class="btn btn-primary">Save API Settings</button>
+                <button type="button" class="btn btn-ghost" onclick="clearApiKey()">Clear Key</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ── DANGER ZONE ── -->
+        <div class="settings-section" id="section-danger">
+          <div class="settings-card">
+            <div class="settings-card-title">Danger Zone</div>
+            <div class="settings-card-desc">These actions are irreversible. Please proceed with caution.</div>
+
+            <div class="danger-zone">
+              <div class="danger-zone-title">🗑️ Delete Account</div>
+              <div class="danger-zone-desc">
+                Permanently delete your account and all associated data — projects, plans, outputs, and conversation history.
+                This cannot be undone.
+              </div>
+
+              <button class="btn btn-danger" onclick="showDeleteConfirm()">
+                Delete My Account
+              </button>
+
+              <!-- Confirmation flow -->
+              <div class="delete-confirm" id="delete-confirm">
+                <p class="text-small" style="margin-bottom:var(--space-md); color:var(--color-danger); font-weight:500">
+                  ⚠️ This will permanently delete all your data. Type <strong>DELETE</strong> to confirm.
+                </p>
+                <div class="form-group">
+                  <input type="text" id="delete-confirm-input" class="form-input" placeholder='Type "DELETE" to confirm'
+                    oninput="checkDeleteConfirm(this.value)">
+                </div>
+                <div class="flex gap-md" style="margin-top:var(--space-md)">
+                  <button class="btn btn-danger" id="btn-confirm-delete" disabled onclick="deleteAccount()">
+                    Yes, Delete My Account
+                  </button>
+                  <button class="btn btn-ghost" onclick="hideDeleteConfirm()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>
