@@ -519,10 +519,13 @@
           <div class="mini-card">
             <div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:8px">Scope Extract</div>
             <div style="font-size:8px;font-weight:700;color:var(--green);margin-bottom:4px">✅ In Scope (6 items)</div>
-            ${['VPC architecture & security setup','IAM roles & access policies','EC2 & RDS provisioning','Monitoring & alerting setup'].map(i=>`<div style="font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)">• ${i}</div>`).join('')}
+            <div style="font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)">• VPC architecture &amp; security setup</div>
+            <div style="font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)">• IAM roles &amp; access policies</div>
+            <div style="font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)">• EC2 &amp; RDS provisioning</div>
+            <div style="font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)">• Monitoring &amp; alerting setup</div>
             <div style="font-size:8px;font-weight:700;color:var(--red);margin-top:7px;margin-bottom:4px">❌ Out of Scope (3 items)</div>
-            <div style="font-size:8px;color:var(--text);">• Application code development</div>
-            <div style="font-size:8px;color:var(--text);">• Third-party license management</div>
+            <div style="font-size:8px;color:var(--text);padding:2px 0">• Application code development</div>
+            <div style="font-size:8px;color:var(--text);padding:2px 0">• Third-party license management</div>
             <div style="background:var(--amber-pale);border:1px solid #FDE68A;border-radius:5px;padding:5px;margin-top:7px;font-size:8px;color:#92400E">⚠️ 2 ambiguities flagged — clarify with client</div>
           </div>
         </div>
@@ -534,7 +537,9 @@
           <div class="mini-card">
             <div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:8px">Implementation Plan</div>
             <div style="font-size:8px;font-weight:600;color:var(--text-3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Phase 1 — Discovery · 2 wks</div>
-            ${['Kickoff & governance setup','Network diagram collection','Compliance assessment'].map(t=>`<div style="display:flex;gap:5px;align-items:center;font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--bg)"><span style="color:var(--green)">✓</span>${t}</div>`).join('')}
+            <div style="display:flex;gap:5px;align-items:center;font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--bg)"><span style="color:var(--green)">✓</span>Kickoff &amp; governance setup</div>
+            <div style="display:flex;gap:5px;align-items:center;font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--bg)"><span style="color:var(--green)">✓</span>Network diagram collection</div>
+            <div style="display:flex;gap:5px;align-items:center;font-size:8px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--bg)"><span style="color:var(--green)">✓</span>Compliance assessment</div>
             <div style="margin-top:7px">
               <div style="font-size:8px;font-weight:600;color:var(--text-3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">RACI snapshot</div>
               <div class="mini-raci-grid">
@@ -572,7 +577,12 @@
               <div class="mini-slide-d">Vendor Team · Client Co. · June 2026</div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:7px">
-              ${[['Client Overview','Business model & signals'],['Solution Fit','8/10 · Strong'],['Scope','In vs out'],['Timeline','12 wks · Go-Live'],['Team & RACI','6+8 roles'],['Next Steps','4 actions']].map(([t,d])=>`<div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">${t}</div><div style="font-size:7px;color:var(--text-3)">${d}</div></div>`).join('')}
+              <div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">Client Overview</div><div style="font-size:7px;color:var(--text-3)">Business model &amp; signals</div></div>
+              <div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">Solution Fit</div><div style="font-size:7px;color:var(--text-3)">8/10 · Strong</div></div>
+              <div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">Scope</div><div style="font-size:7px;color:var(--text-3)">In vs out of scope</div></div>
+              <div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">Timeline</div><div style="font-size:7px;color:var(--text-3)">12 wks · Go-Live</div></div>
+              <div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">Team &amp; RACI</div><div style="font-size:7px;color:var(--text-3)">6+8 roles</div></div>
+              <div style="background:var(--bg);border-radius:5px;padding:5px"><div style="font-size:8px;font-weight:600;color:var(--text)">Next Steps</div><div style="font-size:7px;color:var(--text-3)">4 actions</div></div>
             </div>
             <div style="background:var(--navy);color:white;text-align:center;border-radius:5px;padding:5px;font-size:9px;font-weight:600">⬇️ Download .pptx</div>
           </div>
