@@ -293,12 +293,11 @@ async function downloadKickoffDeck() {
       })
     });
 
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error || 'Failed to generate deck');
-    }
+    const data = await response.json().catch(() => ({ error: 'Server error - check Vercel logs' }));
 
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to generate deck');
+    }
 
     // Convert base64 to blob and download
     const binary = atob(data.pptx);
