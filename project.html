@@ -276,18 +276,50 @@ You can also describe the project scope in plain language if you don't have a fo
         <div id="actions-implementation-plan" style="display:none" class="phase-actions">
           <button class="btn btn-secondary btn-sm" onclick="runPhase4(true)">🔄 Regenerate</button>
           <button class="btn btn-primary" onclick="switchTab('deliverables')">
-            Next: Deliverables →
+            Next: Generate Deliverables →
           </button>
         </div>
       </div>
 
-      <!-- ── TAB: DELIVERABLES (Coming Session 3) ── -->
+      <!-- ── TAB: DELIVERABLES ── -->
       <div class="tab-panel" id="tab-deliverables">
-        <div class="coming-soon">
-          <div class="coming-soon-icon">🎯</div>
-          <h3>Deliverables</h3>
-          <p class="text-secondary">Your kickoff deck, timeline, go-live checklist, change management plan, and status report templates will be generated here after completing the implementation plan.</p>
-          <button class="btn btn-secondary" onclick="switchTab('client-intelligence')">← Start from Phase 1</button>
+        <div class="phase-intro">
+          <div class="phase-intro-icon">🎯</div>
+          <div>
+            <h3>Project Deliverables</h3>
+            <p class="text-secondary">AI generates all presentation-ready materials — kickoff deck, visual timeline, go-live checklist, and weekly status report template.</p>
+          </div>
+        </div>
+
+        <div class="phase-form" id="form-deliverables">
+          <div class="card">
+            <h4 style="margin-bottom:var(--space-sm)">Generate All Deliverables</h4>
+            <p class="text-secondary text-small" style="margin-bottom:var(--space-lg)">
+              Creates your kickoff presentation, visual Gantt timeline, go-live readiness checklist, and status report template — all tailored to your project.
+            </p>
+            <button class="btn btn-primary" id="btn-deliverables" onclick="runPhase5()">
+              🎯 Generate Deliverables →
+            </button>
+          </div>
+        </div>
+
+        <div class="phase-loading" id="loading-deliverables" style="display:none">
+          <div class="loading-card">
+            <div class="spinner spinner-lg"></div>
+            <div class="loading-steps">
+              <div class="loading-step active">🎯 Building kickoff deck...</div>
+              <div class="loading-step">📅 Creating visual timeline...</div>
+              <div class="loading-step">✅ Generating go-live checklist...</div>
+              <div class="loading-step">📊 Building status template...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="output-deliverables"></div>
+
+        <div id="actions-deliverables" style="display:none" class="phase-actions">
+          <button class="btn btn-secondary btn-sm" onclick="runPhase5(true)">🔄 Regenerate</button>
+          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print All</button>
         </div>
       </div>
 
@@ -301,7 +333,7 @@ You can also describe the project scope in plain language if you don't have a fo
   <script src="js/phases/client-intelligence.js"></script>
   <script src="js/phases/solution-context.js"></script>
   <script src="js/phases/scope-analysis.js"></script>
-  <script src="js/phases/implementation-plan.js"></script>
+  <script src="js/phases/deliverables.js"></script>
   <script src="js/project.js"></script>
 </body>
 </html>

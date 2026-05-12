@@ -119,6 +119,11 @@ async function loadAllPhases() {
     renderPhaseOutput('implementation-plan', PHASE_IMPLEMENTATION_PLAN.render(phaseData.implementation_plan));
     updateStepStatus(4, 'done');
   }
+
+  if (phaseData.deliverables) {
+    renderPhaseOutput('deliverables', PHASE_DELIVERABLES.render(phaseData.deliverables));
+    updateStepStatus(5, 'done');
+  }
 }
 
 // ── Tab Navigation ──
@@ -269,7 +274,36 @@ async function runPhase3(regenerate = false) {
   }
 }
 
-// ── Phase 4: Implementation Plan ──
+// ── Phase 5: Deliverables ──
+async function runPhase5(regenerate = false) {
+  if (!regenerate && phaseData.deliverables) return;
+
+  document.getElementById('form-deliverables').style.display = 'none';
+  document.getElementById('loading-deliverables').style.display = 'block';
+  document.getElementById('output-deliverables').innerHTML = '';
+  document.getElementById('actions-deliverables').style.display = 'none';
+
+  try {
+    const result = await PHASE_DELIVERABLES.generate(
+      projectId,
+      phaseData.client_intelligence,
+      phaseData.solution_context,
+      phaseData.scope_analysis,
+      phaseData.implementation_plan
+    );
+    phaseData.deliverables = result;
+
+    document.getElementById('loading-deliverables').style.display = 'none';
+    renderPhaseOutput('deliverables', PHASE_DELIVERABLES.render(result));
+    updateStepStatus(5, 'done');
+    showToast('Deliverables ready!', 'success');
+  } catch (err) {
+    document.getElementById('loading-deliverables').style.display = 'none';
+    document.getElementById('form-deliverables').style.display = 'block';
+    showToast(err.message || 'Failed to generate deliverables. Please try again.', 'error');
+    console.error(err);
+  }
+}
 async function runPhase4(regenerate = false) {
   if (!regenerate && phaseData.implementation_plan) return;
 
