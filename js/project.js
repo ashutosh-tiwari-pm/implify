@@ -105,7 +105,6 @@ async function loadAllPhases() {
   if (phaseData.solution_context) {
     renderPhaseOutput('solution-context', PHASE_SOLUTION_CONTEXT.render(phaseData.solution_context));
     updateStepStatus(2, 'done');
-    // Pre-fill solution name
     if (project.solution_name) {
       document.getElementById('input-solution-name').value = project.solution_name;
     }
@@ -114,6 +113,11 @@ async function loadAllPhases() {
   if (phaseData.scope_analysis) {
     renderPhaseOutput('scope-analysis', PHASE_SCOPE_ANALYSIS.render(phaseData.scope_analysis));
     updateStepStatus(3, 'done');
+  }
+
+  if (phaseData.implementation_plan) {
+    renderPhaseOutput('implementation-plan', PHASE_IMPLEMENTATION_PLAN.render(phaseData.implementation_plan));
+    updateStepStatus(4, 'done');
   }
 }
 
@@ -265,10 +269,39 @@ async function runPhase3(regenerate = false) {
   }
 }
 
+// ── Phase 4: Implementation Plan ──
+async function runPhase4(regenerate = false) {
+  if (!regenerate && phaseData.implementation_plan) return;
+
+  document.getElementById('form-implementation-plan').style.display = 'none';
+  document.getElementById('loading-implementation-plan').style.display = 'block';
+  document.getElementById('output-implementation-plan').innerHTML = '';
+  document.getElementById('actions-implementation-plan').style.display = 'none';
+
+  try {
+    const result = await PHASE_IMPLEMENTATION_PLAN.generate(
+      projectId,
+      phaseData.client_intelligence,
+      phaseData.solution_context,
+      phaseData.scope_analysis
+    );
+    phaseData.implementation_plan = result;
+
+    document.getElementById('loading-implementation-plan').style.display = 'none';
+    renderPhaseOutput('implementation-plan', PHASE_IMPLEMENTATION_PLAN.render(result));
+    updateStepStatus(4, 'done');
+    showToast('Implementation plan ready!', 'success');
+  } catch (err) {
+    document.getElementById('loading-implementation-plan').style.display = 'none';
+    document.getElementById('form-implementation-plan').style.display = 'block';
+    showToast(err.message || 'Failed to generate plan. Please try again.', 'error');
+    console.error(err);
+  }
+}
+
 // ── Phase 4 placeholder ──
 function goToPhase4() {
   switchTab('implementation-plan');
-  showToast('Implementation Plan coming in the next update!', '');
 }
 
 // ── Render Output ──

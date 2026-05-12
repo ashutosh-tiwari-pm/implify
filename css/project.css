@@ -564,8 +564,305 @@
 
 .mt-md { margin-top: var(--space-md); }
 
-/* ── Responsive ── */
+/* ── Plan Tabs ── */
+.plan-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--color-border-light);
+  padding-bottom: var(--space-sm);
+}
+
+.plan-tab {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.plan-tab:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.plan-tab.active {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.plan-tab-panel {
+  display: none;
+}
+
+.plan-tab-panel.active {
+  display: block;
+}
+
+/* ── Phase Blocks ── */
+.phase-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  overflow: hidden;
+}
+
+.phase-block-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-primary);
+  color: white;
+}
+
+.phase-block-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.phase-block-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.phase-block-duration {
+  font-size: 0.8125rem;
+  opacity: 0.9;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.phase-block-body {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.phase-block-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+/* ── RACI Table ── */
+.raci-legend {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.raci-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.raci-table-wrapper {
+  overflow-x: auto;
+}
+
+.raci-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  min-width: 700px;
+}
+
+.raci-table th {
+  padding: 10px 12px;
+  background: var(--color-surface-hover);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.raci-activity-col {
+  text-align: left !important;
+  min-width: 200px;
+}
+
+.raci-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border-light);
+  text-align: center;
+}
+
+.raci-activity {
+  text-align: left !important;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.raci-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+/* ── Risk Cards ── */
+.risk-summary {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.risk-summary-item {
+  flex: 1;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.risk-summary-count {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.risk-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  overflow: hidden;
+}
+
+.risk-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-surface-hover);
+  flex-wrap: wrap;
+}
+
+.risk-id {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  min-width: 40px;
+}
+
+.risk-title {
+  flex: 1;
+  font-weight: 600;
+}
+
+.risk-badges {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.risk-card-body {
+  padding: var(--space-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.risk-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.risk-detail-full {
+  grid-column: 1 / -1;
+}
+
+.risk-detail-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.risk-detail-value {
+  font-size: 0.9375rem;
+}
+
+/* ── Resource Items ── */
+.resource-item {
+  padding: var(--space-md);
+  background: var(--color-surface-hover);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+}
+
+.resource-role {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.resource-detail {
+  margin-bottom: 6px;
+}
+
+.resource-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* ── Checklist ── */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.checklist-item:last-child {
+  border-bottom: none;
+}
+
+.checklist-checkbox {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+/* ── Responsive additions ── */
 @media (max-width: 768px) {
+  .phase-block-two-col { grid-template-columns: 1fr; }
+  .risk-card-body { grid-template-columns: 1fr; }
+  .risk-summary { flex-direction: column; }
+  .plan-tabs { gap: 4px; }
+  .plan-tab { padding: 6px 10px; font-size: 0.8125rem; }
+}
+
   .output-grid { grid-template-columns: 1fr; }
   .output-hero { flex-direction: column; }
   .output-hero-stats { flex-direction: row; justify-content: space-between; }

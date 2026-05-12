@@ -233,13 +233,51 @@ You can also describe the project scope in plain language if you don't have a fo
         </div>
       </div>
 
-      <!-- ── TAB: IMPLEMENTATION PLAN (Coming Session 3) ── -->
+      <!-- ── TAB: IMPLEMENTATION PLAN ── -->
       <div class="tab-panel" id="tab-implementation-plan">
-        <div class="coming-soon">
-          <div class="coming-soon-icon">🚀</div>
-          <h3>Implementation Plan</h3>
-          <p class="text-secondary">Complete Phases 1–3 first. Once you have client intelligence, solution fit, and scope analysis, the AI will generate a complete phased implementation plan with RACI matrix and risk register.</p>
-          <button class="btn btn-secondary" onclick="switchTab('client-intelligence')">← Start from Phase 1</button>
+        <div class="phase-intro">
+          <div class="phase-intro-icon">🚀</div>
+          <div>
+            <h3>Implementation Plan</h3>
+            <p class="text-secondary">AI generates a complete phased implementation plan using all previous phase data — phases, tasks, RACI matrix, risk register, resource plan, and change management strategy.</p>
+          </div>
+        </div>
+
+        <div class="phase-form" id="form-implementation-plan">
+          <div class="card">
+            <h4 style="margin-bottom:var(--space-sm)">Ready to Generate Your Implementation Plan</h4>
+            <p class="text-secondary text-small" style="margin-bottom:var(--space-lg)">
+              AI will use your client intelligence, solution fit analysis, and scope to generate a comprehensive implementation plan with RACI matrix, risk register, resource plan, and change management strategy.
+            </p>
+            <div id="phase4-warning" style="display:none" class="consideration-item risk" style="margin-bottom:var(--space-md)">
+              ⚠️ Complete Phases 1–3 first for the best results.
+            </div>
+            <button class="btn btn-primary" id="btn-plan" onclick="runPhase4()">
+              🚀 Generate Implementation Plan →
+            </button>
+          </div>
+        </div>
+
+        <div class="phase-loading" id="loading-implementation-plan" style="display:none">
+          <div class="loading-card">
+            <div class="spinner spinner-lg"></div>
+            <div class="loading-steps">
+              <div class="loading-step active">📋 Structuring implementation phases...</div>
+              <div class="loading-step">👥 Building RACI matrix...</div>
+              <div class="loading-step">⚠️ Generating risk register...</div>
+              <div class="loading-step">🔄 Creating change management plan...</div>
+              <div class="loading-step">⚙️ Building configuration checklist...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="output-implementation-plan"></div>
+
+        <div id="actions-implementation-plan" style="display:none" class="phase-actions">
+          <button class="btn btn-secondary btn-sm" onclick="runPhase4(true)">🔄 Regenerate</button>
+          <button class="btn btn-primary" onclick="switchTab('deliverables')">
+            Next: Deliverables →
+          </button>
         </div>
       </div>
 
@@ -263,6 +301,7 @@ You can also describe the project scope in plain language if you don't have a fo
   <script src="js/phases/client-intelligence.js"></script>
   <script src="js/phases/solution-context.js"></script>
   <script src="js/phases/scope-analysis.js"></script>
+  <script src="js/phases/implementation-plan.js"></script>
   <script src="js/project.js"></script>
 </body>
 </html>
