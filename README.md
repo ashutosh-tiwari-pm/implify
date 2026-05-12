@@ -1,134 +1,163 @@
-# ⚡ AI Implementation Manager (AIM)
+# Implify — AI Implementation Manager
 
-**From Contract to Go-Live Plan in Minutes**
+> **From Contract to Go-Live Plan in Minutes**
 
-AI-powered implementation planning for B2B SaaS teams. Enter a client name, paste a SOW — get a complete implementation plan with client intelligence, RACI matrix, risk register, kickoff deck, and timeline.
+AI-powered implementation planning for B2B SaaS teams. Enter a client name, paste a SOW — get a complete implementation plan with client intelligence, RACI matrix, risk register, kickoff deck, and Gantt timeline. No manual research. No spreadsheets. Ready to present.
 
 🔗 **[Try it live →](https://ai-implementation-manager.vercel.app)**
 
 ---
 
-## What It Does
+## The Problem
 
-Most B2B SaaS implementations start with weeks of manual work — researching the client, reading the contract, building spreadsheets, creating slide decks. AIM compresses that into minutes using AI.
+Most B2B SaaS implementation teams spend **3–5 weeks** manually preparing before they can even start. Senior consultants spend **40+ hours per engagement** on research and prep work. 68% of enterprise SaaS implementations experience delays caused by poor initial planning.
 
-### Five AI-Powered Phases
-
-| Phase | What AI Does |
-|-------|-------------|
-| 🔍 **Client Intelligence** | Researches the company — business model, geography, market, regulators, competitors, recent news, key stakeholders |
-| 🔗 **Solution-Client Fit** | Maps your SaaS product capabilities to the client's specific needs and identifies implementation complexity |
-| 📋 **Scope Analysis** | Extracts scope, deliverables, timelines, SLAs, integrations, and special requirements from the SOW/contract |
-| 📊 **Implementation Plan** | Generates phased plan (Discovery → Configure → Test → Train → Go-Live → Hypercare) with tasks, RACI, dependencies, risks |
-| 🎯 **Deliverables** | Creates kickoff deck, timeline, risk register, go-live checklist, change management plan, and status report template |
-
-### Key Features
-
-- **Automated client research** from publicly available information
-- **Complete implementation plans** with phases, tasks, owners, and durations
-- **RACI matrix** — who does what (client vs vendor)
-- **Risk register** with severity ratings and mitigations
-- **Kickoff deck** ready to present to the client
-- **Follow-up refinement** — iterate with AI ("Shorten timeline to 8 weeks", "Add data migration phase")
-- **Project history** — save, revisit, and iterate on past plans
-- **Your API key, your data** — Claude API key stored locally in your browser
+**Implify compresses all of this into under 30 minutes.**
 
 ---
 
-## Tech Stack
+## Five AI-Powered Phases
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Vanilla HTML / CSS / JavaScript |
-| Hosting | Vercel |
-| Database | Supabase (PostgreSQL) |
-| Auth | Supabase Auth (Email + Google) |
-| AI | Claude API (Haiku 4.5 / Sonnet 4.6) |
-| Security | Row-Level Security (RLS), API key stored client-side |
+| # | Phase | What AI Does |
+|---|-------|-------------|
+| 🔍 | **Client Intelligence** | Researches the company — business model, market, regulators, competitors, and recent news |
+| 🔗 | **Solution-Client Fit** | Maps your SaaS product to client needs. Scores fit 1–10, identifies must-have modules |
+| 📋 | **Scope Analysis** | Extracts scope, deliverables, timelines, SLAs, and flags every ambiguity from the SOW |
+| 📊 | **Implementation Plan** | Phased plan with tasks, RACI matrix, risk register, resource plan, and change management |
+| 🎯 | **Deliverables** | 9-slide PowerPoint kickoff deck, Gantt timeline, go-live checklist, status report template |
 
 ---
 
-## Getting Started
+## Key Features
 
-### Prerequisites
-- A [Supabase](https://supabase.com) account (free tier)
-- A [Claude API key](https://console.anthropic.com) from Anthropic
-- A [Vercel](https://vercel.com) account (free tier)
-
-### Setup
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/ashutosh-tiwari-pm/ai-implementation-manager.git
-   cd ai-implementation-manager
-   ```
-
-2. **Set up Supabase**
-   - Create a new project at [supabase.com](https://supabase.com)
-   - Go to SQL Editor → paste the contents of `supabase/schema.sql` → Run
-   - Go to Settings → API → Copy your Project URL and `anon` key
-
-3. **Configure the app**
-   - Open `js/supabase-client.js`
-   - Replace `YOUR_PROJECT_ID` and `YOUR_ANON_KEY` with your Supabase credentials
-
-4. **Deploy to Vercel**
-   - Push to GitHub
-   - Connect the repo to Vercel
-   - It auto-deploys on every push
-
-5. **Add your Claude API key**
-   - Sign in to the app
-   - Go to Settings (⚙️) → paste your Claude API key
-   - The key is stored in your browser's localStorage only
+- Zero manual research — enter a client name, AI does the rest
+- Complete RACI matrix across all implementation phases
+- Risk register with probability, impact, mitigation, and contingency
+- Download `.pptx` — professionally designed kickoff deck, client-ready
+- Interactive go-live checklist with progress tracking
+- All plans saved per project — iterate and refine anytime
+- Your API key, your data — Claude key stored in browser localStorage only
 
 ---
 
 ## Architecture
 
 ```
-User enters client name + URL
-         │
-         ▼
-   ┌─────────────┐
-   │  Web Search  │  → AI researches the client company
-   │  & Research  │     (business model, market, regulators)
-   └──────┬──────┘
-          │
-          ▼
-   ┌─────────────┐
-   │  Solution    │  → Maps SaaS product to client needs
-   │  Context     │     (modules, integrations, complexity)
-   └──────┬──────┘
-          │
-          ▼
-   ┌─────────────┐
-   │  SOW/Contract│  → Extracts scope, requirements, SLAs
-   │  Analysis    │     (deliverables, timelines, constraints)
-   └──────┬──────┘
-          │
-          ▼
-   ┌─────────────┐
-   │  Plan        │  → Generates complete implementation plan
-   │  Generation  │     (phases, RACI, risks, timeline)
-   └──────┬──────┘
-          │
-          ▼
-   ┌─────────────┐
-   │  Deliverables│  → Creates kickoff deck, checklist,
-   │  Generation  │     status templates, change mgmt plan
-   └─────────────┘
+Browser (Vanilla HTML/CSS/JS)
+    ├── Supabase Auth      Email + Google OAuth
+    ├── Supabase DB        PostgreSQL + Row-Level Security
+    │   ├── projects
+    │   ├── phase_outputs  (JSONB per phase)
+    │   ├── profiles       (avatar, org, timezone)
+    │   └── audit_log
+    └── Vercel Serverless
+        ├── /api/claude.js          Claude API proxy (solves CORS)
+        ├── /api/generate-deck.js   pptxgenjs → .pptx download
+        └── /api/delete-account.js  Supabase admin user delete
+```
+
+**AI call strategy — Phase 4 uses 3 parallel calls via `Promise.all()`** to avoid JSON truncation on large structured outputs. Each call is scoped to one section (phases, RACI, resources), then merged before saving.
+
+---
+
+## Tech Stack
+
+| Layer | Tech | Why |
+|-------|------|-----|
+| Frontend | Vanilla HTML/CSS/JS | No build step, instant Vercel deploy |
+| Database | Supabase PostgreSQL | RLS, real-time, free tier |
+| Auth | Supabase Auth | Email + Google OAuth, zero config |
+| AI | Claude API (Haiku 4.5 + Sonnet 4.6) | Haiku for speed, Sonnet for complex phases |
+| Hosting | Vercel | Auto-deploy, serverless functions |
+| Email | Resend via Supabase SMTP | Transactional emails |
+| PPTX | pptxgenjs (browser CDN) | Client-side, no server round-trip |
+| Storage | Supabase Storage | Avatar uploads, public CDN |
+
+---
+
+## Getting Started
+
+### Prerequisites
+- [Supabase](https://supabase.com) account (free)
+- [Claude API key](https://console.anthropic.com) from Anthropic
+- [Vercel](https://vercel.com) account (free)
+
+### Setup
+
+```bash
+git clone https://github.com/ashutosh-tiwari-pm/ai-implementation-manager.git
+cd ai-implementation-manager
+```
+
+**Run schema in Supabase SQL Editor:**
+```sql
+-- Run supabase/schema.sql first
+-- Then run supabase/profiles-schema.sql
+```
+
+**Set credentials:**
+```javascript
+// js/supabase-client.js
+const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+const SUPABASE_ANON_KEY = 'your_publishable_key';
+```
+
+**Set Vercel environment variables:**
+```
+SUPABASE_URL
+SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+```
+
+**Deploy:**
+```bash
+git push origin main   # Vercel auto-deploys
+```
+
+**Add Claude API key in app:** Sign in → ⚙️ Settings → paste `sk-ant-...`
+
+---
+
+## Project Structure
+
+```
+implify/
+├── index.html                  Landing page
+├── login.html                  Auth (email + Google)
+├── dashboard.html              Projects dashboard
+├── project.html                5-phase workspace
+├── profile.html                Profile settings
+├── api/
+│   ├── claude.js               Claude proxy (CORS)
+│   ├── generate-deck.js        pptxgenjs PPTX generator
+│   └── delete-account.js       Supabase admin delete
+├── js/
+│   ├── supabase-client.js
+│   ├── dashboard.js
+│   ├── project.js
+│   ├── profile.js
+│   ├── utils/ai-client.js      Claude API wrapper
+│   └── phases/
+│       ├── client-intelligence.js
+│       ├── solution-context.js
+│       ├── scope-analysis.js
+│       ├── implementation-plan.js
+│       └── deliverables.js
+└── supabase/
+    ├── schema.sql
+    └── profiles-schema.sql
 ```
 
 ---
 
 ## Built By
 
-**Ashutosh Tiwari** — AI Product Manager with 13+ years in enterprise SaaS
+**Ashutosh Tiwari** — AI Product Manager, 13+ years in enterprise SaaS
 
-- 🔗 [LinkedIn](https://www.linkedin.com/in/ashutosh-tiwari0021)
-- 🌐 [Portfolio](https://pm21.notion.site/Ashutosh-Product-Management-270a1d6b6af980e5951dc13633f9087f)
-- 💻 [GitHub](https://github.com/ashutosh-tiwari-pm)
+I've personally led 40+ enterprise implementations across financial services, healthcare, retail, and compliance platforms. Implify was built to demonstrate what AI-native product thinking looks like in practice — not a demo, a real tool solving a real problem I lived.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ashutosh_Tiwari-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/ashutosh-tiwari0021)
+[![Portfolio](https://img.shields.io/badge/Portfolio-pm21.notion.site-black?style=flat&logo=notion)](https://pm21.notion.site/Ashutosh-Product-Management-270a1d6b6af980e5951dc13633f9087f)
 
 ---
 
