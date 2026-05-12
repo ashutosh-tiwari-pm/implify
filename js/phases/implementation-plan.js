@@ -5,11 +5,11 @@
 
 const PHASE_IMPLEMENTATION_PLAN = {
 
-  SYSTEM_PROMPT: `You are a senior implementation consultant. Generate a concise implementation plan.
+  SYSTEM_PROMPT_PLAN: `You are a senior implementation consultant. Return ONLY valid JSON, no markdown.
+Generate implementation phases for a B2B SaaS project.
+Return max 5 phases, max 3 tasks per phase, max 2 deliverables per phase. Be extremely concise.
 
-Return ONLY valid JSON. No markdown. Be VERY concise — max 4 items per array, 1 sentence per description.
-
-Return this exact structure:
+JSON structure:
 {
   "project_summary": {
     "project_name": "string",
@@ -17,7 +17,7 @@ Return this exact structure:
     "solution": "string",
     "total_duration": "X weeks",
     "go_live_date": "string",
-    "methodology": "Phased/Agile/Waterfall",
+    "methodology": "Phased",
     "team_size": "X client + Y vendor"
   },
   "phases": [
@@ -27,138 +27,82 @@ Return this exact structure:
       "duration": "X weeks",
       "objectives": ["obj1", "obj2"],
       "tasks": [
-        {
-          "task": "brief task name",
-          "owner": "Client/Vendor/Both",
-          "duration": "X days",
-          "dependencies": "none or task name"
-        }
+        {"task": "brief task", "owner": "Client/Vendor/Both", "duration": "X days", "dependencies": "none"}
       ],
       "deliverables": ["del1", "del2"],
-      "exit_criteria": "one sentence exit criteria"
-    }
-  ],
-  "raci_matrix": [
-    {
-      "activity": "activity name",
-      "client_sponsor": "R/A/C/I/-",
-      "client_pm": "R/A/C/I/-",
-      "client_technical": "R/A/C/I/-",
-      "vendor_pm": "R/A/C/I/-",
-      "vendor_architect": "R/A/C/I/-",
-      "vendor_engineer": "R/A/C/I/-"
-    }
-  ],
-  "risk_register": [
-    {
-      "id": "R01",
-      "risk": "brief risk description",
-      "category": "Technical/Commercial/Resource/External",
-      "probability": "High/Medium/Low",
-      "impact": "High/Medium/Low",
-      "risk_score": "High/Medium/Low",
-      "owner": "Client/Vendor",
-      "mitigation": "brief mitigation",
-      "contingency": "brief contingency"
-    }
-  ],
-  "resource_plan": {
-    "client_team": [
-      {
-        "role": "role title",
-        "responsibilities": "brief responsibilities",
-        "time_commitment": "X% or X days/week",
-        "phases_involved": "Phase 1-2"
-      }
-    ],
-    "vendor_team": [
-      {
-        "role": "role title",
-        "responsibilities": "brief responsibilities",
-        "time_commitment": "X% or X days/week",
-        "phases_involved": "Phase 1-4"
-      }
-    ]
-  },
-  "change_management": {
-    "approach": "one sentence approach",
-    "stakeholder_groups": [
-      {
-        "group": "group name",
-        "impact": "High/Medium/Low",
-        "strategy": "brief strategy"
-      }
-    ],
-    "communication_plan": [
-      {
-        "audience": "audience",
-        "message": "key message",
-        "channel": "email/meeting/slack",
-        "frequency": "weekly/monthly"
-      }
-    ],
-    "training_plan": {
-      "approach": "brief approach",
-      "sessions": [
-        {
-          "audience": "who",
-          "topic": "what",
-          "format": "online/in-person",
-          "duration": "X hours",
-          "timing": "Phase X"
-        }
-      ]
-    }
-  },
-  "configuration_checklist": [
-    {
-      "category": "category name",
-      "items": ["item1", "item2", "item3"]
-    }
-  ],
-  "success_metrics": [
-    {
-      "metric": "metric name",
-      "baseline": "current state",
-      "target": "goal",
-      "measurement": "how",
-      "timeframe": "when"
+      "exit_criteria": "one sentence"
     }
   ]
-}
+}`,
 
-STRICT LIMITS: Max 5 phases. Max 4 tasks per phase. Max 2 deliverables per phase. Max 8 RACI rows. Max 5 risks. Max 4 resource roles each side. Max 3 stakeholder groups. Max 3 training sessions. Max 4 checklist categories with 3 items each.`,
+  SYSTEM_PROMPT_RACI: `Return ONLY valid JSON, no markdown. Generate a RACI matrix with max 8 rows.
+{"raci_matrix": [{"activity": "name", "client_sponsor": "R/A/C/I/-", "client_pm": "R/A/C/I/-", "client_technical": "R/A/C/I/-", "vendor_pm": "R/A/C/I/-", "vendor_architect": "R/A/C/I/-", "vendor_engineer": "R/A/C/I/-"}]}`,
+
+  SYSTEM_PROMPT_RISKS: `Return ONLY valid JSON, no markdown. Generate a risk register with max 5 risks.
+{"risk_register": [{"id": "R01", "risk": "brief description", "category": "Technical/Commercial/Resource/External", "probability": "High/Medium/Low", "impact": "High/Medium/Low", "risk_score": "High/Medium/Low", "owner": "Client/Vendor", "mitigation": "brief", "contingency": "brief"}]}`,
+
+  SYSTEM_PROMPT_RESOURCES: `Return ONLY valid JSON, no markdown. Generate resource plan and change management. Max 3 roles each side, max 3 stakeholder groups, max 3 training sessions, max 3 checklist categories.
+{
+  "resource_plan": {
+    "client_team": [{"role": "string", "responsibilities": "brief", "time_commitment": "X%", "phases_involved": "All"}],
+    "vendor_team": [{"role": "string", "responsibilities": "brief", "time_commitment": "X%", "phases_involved": "All"}]
+  },
+  "change_management": {
+    "approach": "one sentence",
+    "stakeholder_groups": [{"group": "string", "impact": "High/Medium/Low", "strategy": "brief"}],
+    "communication_plan": [{"audience": "string", "message": "brief", "channel": "email/meeting", "frequency": "weekly"}],
+    "training_plan": {
+      "approach": "brief",
+      "sessions": [{"audience": "who", "topic": "what", "format": "online/in-person", "duration": "X hrs", "timing": "Phase X"}]
+    }
+  },
+  "configuration_checklist": [{"category": "string", "items": ["item1", "item2", "item3"]}],
+  "success_metrics": [{"metric": "string", "baseline": "current", "target": "goal", "measurement": "how", "timeframe": "when"}]
+}`,
 
   async generate(projectId, clientIntelligence, solutionContext, scopeAnalysis) {
     const context = `
-CLIENT: ${clientIntelligence?.company_name || 'Not specified'}
+Client: ${clientIntelligence?.company_name || 'Not specified'}
 Industry: ${clientIntelligence?.market_position?.industry || 'Not specified'}
 Size: ${clientIntelligence?.overview?.size || 'Not specified'}
-Regulatory complexity: ${clientIntelligence?.regulatory_environment?.compliance_complexity || 'Not specified'}
-Implementation complexity: ${clientIntelligence?.implementation_considerations?.complexity || 'Not specified'}
+Solution: ${solutionContext?.solution_name || 'Not specified'}
+Duration: ${scopeAnalysis?.timeline?.total_duration || '12 weeks'}
+Go-live: ${scopeAnalysis?.timeline?.go_live_date || 'TBD'}
+Risks: ${scopeAnalysis?.risks_identified?.slice(0,2).map(r => r.risk).join(', ') || 'None'}`;
 
-SOLUTION: ${solutionContext?.solution_name || 'Not specified'}
-Fit score: ${solutionContext?.fit_assessment?.fit_score || 'Not specified'}/10
-Methodology: ${solutionContext?.implementation_approach?.recommended_methodology || 'Phased'}
-Modules: ${solutionContext?.relevant_modules?.slice(0, 3).map(m => m.name).join(', ') || 'Not specified'}
+    // Make 3 parallel API calls instead of 1 giant call
+    const [planResult, raciResult, resourceResult] = await Promise.all([
 
-SCOPE:
-Project: ${scopeAnalysis?.project_overview?.project_name || 'Not specified'}
-Duration: ${scopeAnalysis?.timeline?.total_duration || 'Not specified'}
-Go-live: ${scopeAnalysis?.timeline?.go_live_date || 'Not specified'}
-Risks identified: ${scopeAnalysis?.risks_identified?.length || 0}
-Client responsibilities: ${scopeAnalysis?.client_responsibilities?.slice(0, 3).join(', ') || 'Not specified'}`;
+      AI_CLIENT.callJSON(this.SYSTEM_PROMPT_PLAN,
+        `Generate implementation phases for:\n${context}`, 3000),
 
-    const userPrompt = `Generate a complete implementation plan for this project:
+      AI_CLIENT.callJSON(this.SYSTEM_PROMPT_RACI,
+        `Generate RACI matrix for AWS implementation for Salesforce. Include: project kickoff, architecture design, environment setup, security configuration, data migration, UAT testing, training, go-live.`, 2000),
 
-${context}
+      AI_CLIENT.callJSON(this.SYSTEM_PROMPT_RESOURCES,
+        `Generate resource plan, change management, and config checklist for:\n${context}`, 3000)
+    ]);
 
-Create a realistic, detailed implementation plan with 4-6 phases covering Discovery through Hypercare. Include a RACI matrix for key activities, risk register, resource plan, change management approach, and configuration checklist. Tailor everything to this specific client's industry, size, and regulatory environment.`;
+    // Merge all results into one object
+    const result = {
+      ...planResult,
+      raci_matrix: raciResult.raci_matrix,
+      risk_register: resourceResult.risk_register || await this.generateRisks(context, scopeAnalysis),
+      resource_plan: resourceResult.resource_plan,
+      change_management: resourceResult.change_management,
+      configuration_checklist: resourceResult.configuration_checklist,
+      success_metrics: resourceResult.success_metrics
+    };
 
-    // Use Sonnet for Phase 4 - handles longer structured outputs better
-    const result = await AI_CLIENT.callJSON(this.SYSTEM_PROMPT, userPrompt, 8000, 'claude-sonnet-4-6');
     await this.save(projectId, result);
     return result;
+  },
+
+  async generateRisks(context, scopeAnalysis) {
+    // Fallback risk generation if not in resource result
+    const result = await AI_CLIENT.callJSON(this.SYSTEM_PROMPT_RISKS,
+      `Generate risks for:\n${context}`, 2000);
+    return result.risk_register;
   },
 
   async save(projectId, data) {
