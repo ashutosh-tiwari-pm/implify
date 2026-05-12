@@ -5,11 +5,9 @@
 
 const PHASE_IMPLEMENTATION_PLAN = {
 
-  SYSTEM_PROMPT: `You are a senior implementation consultant with 15+ years delivering enterprise B2B SaaS implementations globally.
+  SYSTEM_PROMPT: `You are a senior implementation consultant. Generate a concise implementation plan.
 
-Using the client intelligence, solution fit analysis, and scope provided, generate a complete implementation plan.
-
-Return ONLY valid JSON. No markdown, no explanation. Be concise — max 5 items per array.
+Return ONLY valid JSON. No markdown. Be VERY concise — max 4 items per array, 1 sentence per description.
 
 Return this exact structure:
 {
@@ -20,24 +18,24 @@ Return this exact structure:
     "total_duration": "X weeks",
     "go_live_date": "string",
     "methodology": "Phased/Agile/Waterfall",
-    "team_size": "X people client + Y people vendor"
+    "team_size": "X client + Y vendor"
   },
   "phases": [
     {
       "phase_number": 1,
-      "name": "Discovery & Planning",
-      "duration": "2 weeks",
-      "objectives": ["objective1", "objective2"],
+      "name": "Phase name",
+      "duration": "X weeks",
+      "objectives": ["obj1", "obj2"],
       "tasks": [
         {
-          "task": "task description",
+          "task": "brief task name",
           "owner": "Client/Vendor/Both",
           "duration": "X days",
           "dependencies": "none or task name"
         }
       ],
-      "deliverables": ["deliverable1", "deliverable2"],
-      "exit_criteria": "what must be true to move to next phase"
+      "deliverables": ["del1", "del2"],
+      "exit_criteria": "one sentence exit criteria"
     }
   ],
   "raci_matrix": [
@@ -54,60 +52,60 @@ Return this exact structure:
   "risk_register": [
     {
       "id": "R01",
-      "risk": "risk description",
+      "risk": "brief risk description",
       "category": "Technical/Commercial/Resource/External",
       "probability": "High/Medium/Low",
       "impact": "High/Medium/Low",
       "risk_score": "High/Medium/Low",
       "owner": "Client/Vendor",
-      "mitigation": "mitigation strategy",
-      "contingency": "what to do if risk materializes"
+      "mitigation": "brief mitigation",
+      "contingency": "brief contingency"
     }
   ],
   "resource_plan": {
     "client_team": [
       {
         "role": "role title",
-        "responsibilities": "key responsibilities",
-        "time_commitment": "% of time or days/week",
-        "phases_involved": "Phase 1, 2..."
+        "responsibilities": "brief responsibilities",
+        "time_commitment": "X% or X days/week",
+        "phases_involved": "Phase 1-2"
       }
     ],
     "vendor_team": [
       {
         "role": "role title",
-        "responsibilities": "key responsibilities",
-        "time_commitment": "% of time or days/week",
-        "phases_involved": "Phase 1, 2..."
+        "responsibilities": "brief responsibilities",
+        "time_commitment": "X% or X days/week",
+        "phases_involved": "Phase 1-4"
       }
     ]
   },
   "change_management": {
-    "approach": "brief description of change management strategy",
+    "approach": "one sentence approach",
     "stakeholder_groups": [
       {
         "group": "group name",
         "impact": "High/Medium/Low",
-        "strategy": "engagement strategy"
+        "strategy": "brief strategy"
       }
     ],
     "communication_plan": [
       {
         "audience": "audience",
         "message": "key message",
-        "channel": "email/meeting/town hall",
-        "frequency": "weekly/monthly/milestone"
+        "channel": "email/meeting/slack",
+        "frequency": "weekly/monthly"
       }
     ],
     "training_plan": {
-      "approach": "training approach",
+      "approach": "brief approach",
       "sessions": [
         {
           "audience": "who",
           "topic": "what",
-          "format": "how",
-          "duration": "how long",
-          "timing": "when"
+          "format": "online/in-person",
+          "duration": "X hours",
+          "timing": "Phase X"
         }
       ]
     }
@@ -123,11 +121,13 @@ Return this exact structure:
       "metric": "metric name",
       "baseline": "current state",
       "target": "goal",
-      "measurement": "how to measure",
+      "measurement": "how",
       "timeframe": "when"
     }
   ]
-}`,
+}
+
+STRICT LIMITS: Max 5 phases. Max 4 tasks per phase. Max 2 deliverables per phase. Max 8 RACI rows. Max 5 risks. Max 4 resource roles each side. Max 3 stakeholder groups. Max 3 training sessions. Max 4 checklist categories with 3 items each.`,
 
   async generate(projectId, clientIntelligence, solutionContext, scopeAnalysis) {
     const context = `
@@ -155,7 +155,8 @@ ${context}
 
 Create a realistic, detailed implementation plan with 4-6 phases covering Discovery through Hypercare. Include a RACI matrix for key activities, risk register, resource plan, change management approach, and configuration checklist. Tailor everything to this specific client's industry, size, and regulatory environment.`;
 
-    const result = await AI_CLIENT.callJSON(this.SYSTEM_PROMPT, userPrompt, 8000);
+    // Use Sonnet for Phase 4 - handles longer structured outputs better
+    const result = await AI_CLIENT.callJSON(this.SYSTEM_PROMPT, userPrompt, 8000, 'claude-sonnet-4-6');
     await this.save(projectId, result);
     return result;
   },

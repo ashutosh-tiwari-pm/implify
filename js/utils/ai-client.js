@@ -6,9 +6,9 @@
 const AI_CLIENT = {
 
   // ── Core API call (goes through /api/claude proxy) ──
-  async call(systemPrompt, userPrompt, maxTokens = 4000) {
+  async call(systemPrompt, userPrompt, maxTokens = 4000, modelOverride = null) {
     const apiKey = localStorage.getItem('aim_api_key');
-    const model = localStorage.getItem('aim_model') || 'claude-haiku-4-5-20251001';
+    const model = modelOverride || localStorage.getItem('aim_model') || 'claude-haiku-4-5-20251001';
 
     if (!apiKey) {
       throw new Error('No API key found. Please add your Claude API key in Settings.');
@@ -16,9 +16,7 @@ const AI_CLIENT = {
 
     const response = await fetch('/api/claude', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         apiKey,
         model,
@@ -83,8 +81,8 @@ const AI_CLIENT = {
   },
 
   // ── Call and parse JSON in one step ──
-  async callJSON(systemPrompt, userPrompt, maxTokens = 4000) {
-    const text = await this.call(systemPrompt, userPrompt, maxTokens);
+  async callJSON(systemPrompt, userPrompt, maxTokens = 4000, modelOverride = null) {
+    const text = await this.call(systemPrompt, userPrompt, maxTokens, modelOverride);
     return this.parseJSON(text);
   }
 };
