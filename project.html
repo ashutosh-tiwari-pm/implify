@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project — AI Implementation Manager</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/project.css">
+</head>
+<body>
+
+  <!-- ═══ APP HEADER ═══ -->
+  <header class="app-header">
+    <div class="container">
+      <div class="flex items-center gap-md">
+        <a href="dashboard.html" class="app-logo">
+          <div class="app-logo-icon">⚡</div>
+          AIM
+        </a>
+        <span class="text-muted">/</span>
+        <span class="text-secondary text-small" id="project-breadcrumb">Loading...</span>
+      </div>
+      <div class="app-nav">
+        <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ PROJECT HEADER ═══ -->
+  <div class="project-header">
+    <div class="container">
+      <div class="project-header-content">
+        <div>
+          <h2 id="project-name">Loading...</h2>
+          <div class="project-header-meta">
+            <span id="project-client" class="text-secondary text-small"></span>
+            <span class="text-muted">·</span>
+            <span id="project-status-badge"></span>
+          </div>
+        </div>
+        <div class="project-header-actions">
+          <a id="client-url-link" href="#" target="_blank" class="btn btn-secondary btn-sm" style="display:none">
+            🔗 Visit Client Site
+          </a>
+        </div>
+      </div>
+
+      <!-- Phase Progress Bar -->
+      <div class="phase-progress">
+        <div class="phase-step" id="step-1" onclick="switchTab('client-intelligence')">
+          <div class="phase-step-dot">1</div>
+          <div class="phase-step-label">Client Intelligence</div>
+        </div>
+        <div class="phase-connector"></div>
+        <div class="phase-step" id="step-2" onclick="switchTab('solution-context')">
+          <div class="phase-step-dot">2</div>
+          <div class="phase-step-label">Solution Fit</div>
+        </div>
+        <div class="phase-connector"></div>
+        <div class="phase-step" id="step-3" onclick="switchTab('scope-analysis')">
+          <div class="phase-step-dot">3</div>
+          <div class="phase-step-label">Scope Analysis</div>
+        </div>
+        <div class="phase-connector"></div>
+        <div class="phase-step phase-step-locked" id="step-4">
+          <div class="phase-step-dot">4</div>
+          <div class="phase-step-label">Impl. Plan</div>
+        </div>
+        <div class="phase-connector"></div>
+        <div class="phase-step phase-step-locked" id="step-5">
+          <div class="phase-step-dot">5</div>
+          <div class="phase-step-label">Deliverables</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="project-main">
+    <div class="container">
+
+      <!-- ── TAB: CLIENT INTELLIGENCE ── -->
+      <div class="tab-panel active" id="tab-client-intelligence">
+        <div class="phase-intro">
+          <div class="phase-intro-icon">🔍</div>
+          <div>
+            <h3>Client Intelligence</h3>
+            <p class="text-secondary">AI researches your client's business model, market, regulators, competitors, and recent news to build a complete client profile.</p>
+          </div>
+        </div>
+
+        <!-- Input form -->
+        <div class="phase-form" id="form-client-intelligence">
+          <div class="card">
+            <h4 style="margin-bottom:var(--space-md)">Research This Client</h4>
+            <div class="form-group">
+              <label class="form-label">Client Company Name</label>
+              <input type="text" id="input-client-name" class="form-input" placeholder="e.g., Acme Corporation" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Website URL</label>
+              <input type="url" id="input-client-url" class="form-input" placeholder="e.g., https://www.acme.com" readonly>
+              <div class="form-hint">AI will research publicly available information about this company.</div>
+            </div>
+            <button class="btn btn-primary" id="btn-research" onclick="runPhase1()">
+              🔍 Research Client with AI →
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading state -->
+        <div class="phase-loading" id="loading-client-intelligence" style="display:none">
+          <div class="loading-card">
+            <div class="spinner spinner-lg"></div>
+            <div class="loading-steps">
+              <div class="loading-step active" id="lstep-1">🔍 Researching company background...</div>
+              <div class="loading-step" id="lstep-2">🏢 Analyzing business model...</div>
+              <div class="loading-step" id="lstep-3">⚖️ Mapping regulatory environment...</div>
+              <div class="loading-step" id="lstep-4">🏆 Identifying competitive landscape...</div>
+              <div class="loading-step" id="lstep-5">🎯 Building implementation considerations...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div id="output-client-intelligence"></div>
+
+        <!-- Regenerate button -->
+        <div id="actions-client-intelligence" style="display:none" class="phase-actions">
+          <button class="btn btn-secondary btn-sm" onclick="runPhase1(true)">🔄 Regenerate</button>
+          <button class="btn btn-primary" onclick="switchTab('solution-context')">
+            Next: Solution Fit →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TAB: SOLUTION CONTEXT ── -->
+      <div class="tab-panel" id="tab-solution-context">
+        <div class="phase-intro">
+          <div class="phase-intro-icon">🔗</div>
+          <div>
+            <h3>Solution-Client Fit</h3>
+            <p class="text-secondary">Describe your SaaS product and AI will map it to this client's specific needs, identifying relevant modules, integrations, and success metrics.</p>
+          </div>
+        </div>
+
+        <div class="phase-form" id="form-solution-context">
+          <div class="card">
+            <h4 style="margin-bottom:var(--space-md)">Your SaaS Solution</h4>
+            <div class="form-group">
+              <label class="form-label">Solution / Product Name</label>
+              <input type="text" id="input-solution-name" class="form-input" placeholder="e.g., MyComplianceOffice">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Description</label>
+              <textarea id="input-solution-description" class="form-textarea" rows="5"
+                placeholder="Describe your SaaS product — what it does, key modules, who it's designed for, main capabilities..."></textarea>
+              <div class="form-hint">The more detail you provide, the better the fit analysis.</div>
+            </div>
+            <button class="btn btn-primary" id="btn-solution" onclick="runPhase2()">
+              🔗 Analyze Solution Fit →
+            </button>
+          </div>
+        </div>
+
+        <div class="phase-loading" id="loading-solution-context" style="display:none">
+          <div class="loading-card">
+            <div class="spinner spinner-lg"></div>
+            <div class="loading-steps">
+              <div class="loading-step active">🔗 Mapping solution to client needs...</div>
+              <div class="loading-step">📦 Identifying relevant modules...</div>
+              <div class="loading-step">📊 Defining success metrics...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="output-solution-context"></div>
+
+        <div id="actions-solution-context" style="display:none" class="phase-actions">
+          <button class="btn btn-secondary btn-sm" onclick="runPhase2(true)">🔄 Regenerate</button>
+          <button class="btn btn-primary" onclick="switchTab('scope-analysis')">
+            Next: Scope Analysis →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TAB: SCOPE ANALYSIS ── -->
+      <div class="tab-panel" id="tab-scope-analysis">
+        <div class="phase-intro">
+          <div class="phase-intro-icon">📋</div>
+          <div>
+            <h3>Scope Analysis</h3>
+            <p class="text-secondary">Paste your SOW or contract text and AI will extract scope, timeline, responsibilities, dependencies, and risks into a structured format.</p>
+          </div>
+        </div>
+
+        <div class="phase-form" id="form-scope-analysis">
+          <div class="card">
+            <h4 style="margin-bottom:var(--space-md)">SOW / Contract Text</h4>
+            <div class="form-group">
+              <label class="form-label">Paste your SOW or Contract</label>
+              <textarea id="input-sow" class="form-textarea" rows="12"
+                placeholder="Paste the text from your Statement of Work, contract, or project scope document here...
+
+You can also describe the project scope in plain language if you don't have a formal SOW yet."></textarea>
+              <div class="form-hint">All text is processed by AI and never stored in plain text — only the structured output is saved.</div>
+            </div>
+            <button class="btn btn-primary" id="btn-scope" onclick="runPhase3()">
+              📋 Analyze Scope →
+            </button>
+          </div>
+        </div>
+
+        <div class="phase-loading" id="loading-scope-analysis" style="display:none">
+          <div class="loading-card">
+            <div class="spinner spinner-lg"></div>
+            <div class="loading-steps">
+              <div class="loading-step active">📋 Extracting project scope...</div>
+              <div class="loading-step">📅 Parsing timeline and milestones...</div>
+              <div class="loading-step">👥 Mapping responsibilities...</div>
+              <div class="loading-step">⚠️ Identifying risks and gaps...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="output-scope-analysis"></div>
+
+        <div id="actions-scope-analysis" style="display:none" class="phase-actions">
+          <button class="btn btn-secondary btn-sm" onclick="runPhase3(true)">🔄 Regenerate</button>
+          <button class="btn btn-primary" id="btn-go-phase4" onclick="goToPhase4()">
+            Next: Generate Implementation Plan →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TAB: IMPLEMENTATION PLAN (Coming Session 3) ── -->
+      <div class="tab-panel" id="tab-implementation-plan">
+        <div class="coming-soon">
+          <div class="coming-soon-icon">🚀</div>
+          <h3>Implementation Plan</h3>
+          <p class="text-secondary">Complete Phases 1–3 first. Once you have client intelligence, solution fit, and scope analysis, the AI will generate a complete phased implementation plan with RACI matrix and risk register.</p>
+          <button class="btn btn-secondary" onclick="switchTab('client-intelligence')">← Start from Phase 1</button>
+        </div>
+      </div>
+
+      <!-- ── TAB: DELIVERABLES (Coming Session 3) ── -->
+      <div class="tab-panel" id="tab-deliverables">
+        <div class="coming-soon">
+          <div class="coming-soon-icon">🎯</div>
+          <h3>Deliverables</h3>
+          <p class="text-secondary">Your kickoff deck, timeline, go-live checklist, change management plan, and status report templates will be generated here after completing the implementation plan.</p>
+          <button class="btn btn-secondary" onclick="switchTab('client-intelligence')">← Start from Phase 1</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/utils/ai-client.js"></script>
+  <script src="js/phases/client-intelligence.js"></script>
+  <script src="js/phases/solution-context.js"></script>
+  <script src="js/phases/scope-analysis.js"></script>
+  <script src="js/project.js"></script>
+</body>
+</html>
