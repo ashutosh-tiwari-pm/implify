@@ -1,0 +1,9 @@
+{
+  "name": "ai-implementation-manager",
+  "version": "1.0.0",
+  "description": "AI-powered implementation planning for B2B SaaS teams",
+  "type": "module",
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}

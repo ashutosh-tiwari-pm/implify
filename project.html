@@ -319,7 +319,9 @@ You can also describe the project scope in plain language if you don't have a fo
 
         <div id="actions-deliverables" style="display:none" class="phase-actions">
           <button class="btn btn-secondary btn-sm" onclick="runPhase5(true)">🔄 Regenerate</button>
-          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print All</button>
+          <button class="btn btn-primary" id="btn-download-deck" onclick="downloadKickoffDeck()">
+            ⬇️ Download Kickoff Deck (.pptx)
+          </button>
         </div>
       </div>
 

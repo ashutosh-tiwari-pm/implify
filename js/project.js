@@ -274,6 +274,56 @@ async function runPhase3(regenerate = false) {
   }
 }
 
+// ── Download Kickoff Deck (PPTX) ──
+async function downloadKickoffDeck() {
+  const btn = document.getElementById('btn-download-deck');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generating deck...';
+
+  try {
+    const response = await fetch('/api/generate-deck', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientIntelligence: phaseData.client_intelligence,
+        solutionContext: phaseData.solution_context,
+        scopeAnalysis: phaseData.scope_analysis,
+        implementationPlan: phaseData.implementation_plan,
+        kickoffDeck: phaseData.deliverables?.kickoff_deck
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'Failed to generate deck');
+    }
+
+    const data = await response.json();
+
+    // Convert base64 to blob and download
+    const binary = atob(data.pptx);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${project?.client_name || 'Client'}_Implementation_Kickoff.pptx`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showToast('Kickoff deck downloaded!', 'success');
+  } catch (err) {
+    showToast(err.message || 'Failed to generate deck', 'error');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '⬇️ Download Kickoff Deck (.pptx)';
+  }
+}
+
 // ── Phase 5: Deliverables ──
 async function runPhase5(regenerate = false) {
   if (!regenerate && phaseData.deliverables) return;
