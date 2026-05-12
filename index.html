@@ -242,6 +242,36 @@
     .sep{color:rgba(255,255,255,.2);font-size:.8125rem}
 
     @media(max-width:1024px){.hero-inner{grid-template-columns:1fr}.hero-visual{display:none}.hero-title{font-size:2.6rem}.feat-item{grid-template-columns:1fr}.feat-item:nth-child(even) .feat-visual{order:0}.stats-grid{grid-template-columns:repeat(2,1fr)}.steps-grid{grid-template-columns:1fr;gap:16px}}
+    
+
+    /* DEMO MODAL */
+    .demo-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.78);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px}
+    .demo-overlay.open{display:flex}
+    .demo-modal{background:var(--surface);border-radius:20px;overflow:hidden;width:100%;max-width:940px;display:flex;flex-direction:column;max-height:92vh;animation:mIn .3s ease}
+    @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .demo-overlay.fullscreen .demo-modal{position:fixed;top:0;left:0;right:0;bottom:0;max-width:none;max-height:none;border-radius:0}
+    .dm-hdr{background:var(--navy);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .dm-hdots{display:flex;gap:5px}
+    .dm-hdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2)}
+    .dm-url-bar{flex:1;text-align:center;font-size:.6875rem;color:rgba(255,255,255,.4)}
+    .dm-hacts{display:flex;gap:6px}
+    .dm-hbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.75);border-radius:7px;padding:5px 10px;font-size:.75rem;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+    .dm-hbtn:hover{background:rgba(255,255,255,.2);color:white}
+    .dm-prog{height:3px;background:rgba(255,255,255,.08);flex-shrink:0}
+    .dm-prog-fill{height:3px;background:var(--blue);transition:width .3s linear;width:0%}
+    .dm-body{background:#F1F5F9;padding:20px;flex:1;overflow-y:auto;transition:opacity .35s}
+    .dm-body.fading{opacity:0}
+    .dm-caption{background:var(--surface);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;border-top:1px solid var(--border);flex-shrink:0}
+    .dm-cap-ico{width:36px;height:36px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.125rem}
+    .dm-cap-step{font-size:.6875rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+    .dm-cap-text{font-size:.9375rem;color:var(--text);line-height:1.55}
+    .dm-footer{background:var(--surface);border-top:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .dm-nav{display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--text-2);background:none;border:1px solid var(--border);border-radius:9px;padding:8px 16px;cursor:pointer;font-family:var(--font-body)}
+    .dm-nav:hover{background:var(--bg)}.dm-nav:disabled{opacity:.3;cursor:default}
+    .dm-dots-row{display:flex;gap:7px;align-items:center}
+    .dm-step-dot{width:9px;height:9px;border-radius:50%;background:var(--border);cursor:pointer;border:none;padding:0;transition:background .2s}
+    .dm-step-dot.on{background:var(--navy)}
+    .dm-counter{font-size:.8125rem;color:var(--text-3);min-width:50px;text-align:center}
     @media(max-width:768px){.hero{padding:120px 0 60px}.hero-title{font-size:2rem}.cta-inner h2{font-size:2rem}.section-title{font-size:1.75rem}.nav-link{display:none}.footer-inner{flex-direction:column;gap:12px}.stats-grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -264,7 +294,7 @@
     </a>
     <div class="nav-links">
       <a href="#features" class="nav-link">Features</a>
-      <a href="#demo" class="nav-link">Demo</a>
+      <a href="#" onclick="openDemoModal();return false;" class="nav-link">Demo</a>
       <a href="#how-it-works" class="nav-link">How It Works</a>
       <a href="login.html" class="btn btn-outline" style="font-size:.875rem;padding:8px 16px">Sign In</a>
       <a href="login.html?mode=signup" class="btn btn-navy" style="font-size:.875rem;padding:8px 16px">Get Started Free</a>
@@ -281,7 +311,7 @@
       <p class="hero-sub">Enter a client name. AI researches the company, analyzes your SOW, and generates a complete implementation plan — phases, RACI matrix, risk register, kickoff deck, and timeline. Ready to present.</p>
       <div class="hero-actions">
         <a href="login.html?mode=signup" class="btn btn-blue btn-lg">Start Planning Free →</a>
-        <a href="#demo" class="btn btn-outline btn-lg">Watch Demo</a>
+        <button onclick="openDemoModal()" class="btn btn-outline btn-lg" style="cursor:pointer">▶ Watch Demo</button>
       </div>
       <p class="hero-note">No credit card required · Free to use · Bring your own Claude API key</p>
     </div>
@@ -632,7 +662,7 @@
 </footer>
 
 <script>
-const DS=[
+window.DS=[
 {url:'implify.app/dashboard',ico:'🏠',step:'Step 1 of 6 — Dashboard',
 cap:'Your dashboard shows all implementation projects with live status tracking. Click "New Implementation" to start planning a new client engagement.',
 html:`<div class="ds-nav"><div class="ds-logo">⚡ Implify</div><div style="flex:1"></div><div class="ds-av">AT</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px"><div class="ds-stat"><div class="ds-sv">4</div><div class="ds-sl">Projects</div></div><div class="ds-stat"><div class="ds-sv">2</div><div class="ds-sl">In Progress</div></div><div class="ds-stat"><div class="ds-sv">1</div><div class="ds-sl">Complete</div></div></div><div class="ds-card" style="border-left:3px solid #059669;border-radius:0 8px 8px 0"><div style="display:flex;justify-content:space-between;align-items:center"><h5>TechCorp Ltd — Platform Implementation</h5><span class="ds-tag ds-tg">Complete</span></div><p>Updated 2h ago · All 5 phases done · Kickoff deck downloaded</p></div><div class="ds-card"><div style="display:flex;justify-content:space-between;align-items:center"><h5>FinServ Co — Compliance Suite</h5><span class="ds-tag ds-tb">Researching</span></div><p>Updated yesterday · Phase 2 in progress</p></div><button class="ds-btn" style="margin-top:6px">+ New Implementation</button>`},
@@ -675,11 +705,136 @@ function drender(i){
 
 function dgo(dir){clearTimeout(tmr);clearInterval(window._pb2);cur=Math.max(0,Math.min(DS.length-1,cur+dir));drender(cur);if(!paused)dauto();}
 function dgoto(i){clearTimeout(tmr);clearInterval(window._pb2);cur=i;drender(cur);if(!paused)dauto();}
-function dauto(){clearTimeout(tmr);tmr=setTimeout(()=>{if(cur<DS.length-1){cur++;drender(cur);dauto();}else{paused=true;document.getElementById('dtimer').textContent='ended';}},IV);}
+function dauto(){clearTimeout(tmr);tmr=setTimeout(()=>{if(cur<(window.DS||[]).length-1){cur++;drender(cur);dauto();}else{paused=true;document.getElementById('dtimer').textContent='ended';}},IV);}
 
 const dd=document.getElementById('ddots');
-DS.forEach((_,i)=>{const b=document.createElement('button');b.className='ddot'+(i===0?' on':'');b.setAttribute('aria-label','Step '+(i+1));b.onclick=()=>dgoto(i);dd.appendChild(b);});
+(window.DS||[]).forEach((_,i)=>{const b=document.createElement('button');b.className='ddot'+(i===0?' on':'');b.setAttribute('aria-label','Step '+(i+1));b.onclick=()=>dgoto(i);dd.appendChild(b);});
 drender(0);dauto();
 </script>
+
+<!-- DEMO MODAL -->
+<div class="demo-overlay" id="demo-overlay" onclick="handleOverlayClick(event)">
+  <div class="demo-modal" id="demo-modal">
+    <div class="dm-hdr">
+      <div class="dm-hdots"><div class="dm-hdot"></div><div class="dm-hdot"></div><div class="dm-hdot"></div></div>
+      <div class="dm-url-bar" id="dm-url">implify.app</div>
+      <div class="dm-hacts">
+        <button class="dm-hbtn" onclick="toggleAutoPlay()" id="dm-autopbtn">⏸ Pause</button>
+        <button class="dm-hbtn" onclick="toggleFullscreen()" id="dm-fsbtn">⛶ Fullscreen</button>
+        <button class="dm-hbtn" onclick="closeDemoModal()">✕ Close</button>
+      </div>
+    </div>
+    <div class="dm-prog"><div class="dm-prog-fill" id="dm-pbar"></div></div>
+    <div class="dm-body" id="dm-body"></div>
+    <div class="dm-caption">
+      <div class="dm-cap-ico" id="dm-ico">🏠</div>
+      <div><div class="dm-cap-step" id="dm-step">Step 1 of 6</div><div class="dm-cap-text" id="dm-text">Loading...</div></div>
+    </div>
+    <div class="dm-footer">
+      <button class="dm-nav" id="dm-prev" onclick="mgo(-1)">← Previous</button>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="dm-dots-row" id="dm-dots"></div>
+        <span class="dm-counter" id="dm-counter">1 / 6</span>
+      </div>
+      <button class="dm-nav" id="dm-next" onclick="mgo(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DEMO MODAL ──
+let mCur=0, mTimer=null, mPaused=false, mFullscreen=false;
+const MIV=5500;
+
+const MDS=window.DS||[];
+
+function openDemoModal(){
+  document.getElementById('demo-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  mCur=0; mPaused=false;
+  mRender(0);
+  mAuto();
+}
+
+function closeDemoModal(){
+  document.getElementById('demo-overlay').classList.remove('open');
+  document.getElementById('demo-overlay').classList.remove('fullscreen');
+  document.body.style.overflow='';
+  clearTimeout(mTimer);clearInterval(window._mpb);
+  mFullscreen=false;
+  document.getElementById('dm-fsbtn').textContent='⛶ Fullscreen';
+}
+
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('demo-overlay')) closeDemoModal();
+}
+
+function toggleFullscreen(){
+  mFullscreen=!mFullscreen;
+  const overlay=document.getElementById('demo-overlay');
+  overlay.classList.toggle('fullscreen',mFullscreen);
+  document.getElementById('dm-fsbtn').textContent=mFullscreen?'⊠ Exit Fullscreen':'⛶ Fullscreen';
+}
+
+function toggleAutoPlay(){
+  mPaused=!mPaused;
+  document.getElementById('dm-autopbtn').textContent=mPaused?'▶ Play':'⏸ Pause';
+  if(!mPaused) mAuto();
+  else{clearTimeout(mTimer);clearInterval(window._mpb);}
+}
+
+function mRender(i){
+  if(!MDS[i])return;
+  const s=MDS[i];
+  const b=document.getElementById('dm-body');
+  b.classList.add('fading');
+  setTimeout(()=>{b.innerHTML=s.html;b.classList.remove('fading');},300);
+  document.getElementById('dm-url').textContent=s.url;
+  document.getElementById('dm-ico').textContent=s.ico;
+  document.getElementById('dm-step').textContent=s.step;
+  document.getElementById('dm-text').textContent=s.cap;
+  document.getElementById('dm-counter').textContent=(i+1)+' / '+MDS.length;
+  document.getElementById('dm-prev').disabled=i===0;
+  document.getElementById('dm-next').disabled=i===MDS.length-1;
+  document.querySelectorAll('.dm-step-dot').forEach((d,j)=>d.classList.toggle('on',j===i));
+  document.getElementById('dm-pbar').style.width='0%';
+  clearInterval(window._mpb);
+  if(!mPaused){let p=0;window._mpb=setInterval(()=>{p+=100/55;document.getElementById('dm-pbar').style.width=Math.min(p,100)+'%';if(p>=100)clearInterval(window._mpb);},MIV/55);}
+}
+
+function mgo(dir){
+  clearTimeout(mTimer);clearInterval(window._mpb);
+  mCur=Math.max(0,Math.min(MDS.length-1,mCur+dir));
+  mRender(mCur);
+  if(!mPaused)mAuto();
+}
+
+function mgoto(i){clearTimeout(mTimer);clearInterval(window._mpb);mCur=i;mRender(mCur);if(!mPaused)mAuto();}
+
+function mAuto(){
+  clearTimeout(mTimer);
+  mTimer=setTimeout(()=>{
+    if(mCur<MDS.length-1){mCur++;mRender(mCur);mAuto();}
+    else{mPaused=true;document.getElementById('dm-autopbtn').textContent='▶ Replay';clearInterval(window._mpb);}
+  },MIV);
+}
+
+// Build dots for modal
+document.addEventListener('DOMContentLoaded',()=>{
+  const dd=document.getElementById('dm-dots');
+  if(dd&&window.DS){window.DS.forEach((_,i)=>{const b=document.createElement('button');b.className='dm-step-dot'+(i===0?' on':'');b.setAttribute('aria-label','Step '+(i+1));b.onclick=()=>mgoto(i);dd.appendChild(b);});}
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown',(e)=>{
+  if(!document.getElementById('demo-overlay').classList.contains('open'))return;
+  if(e.key==='Escape')closeDemoModal();
+  if(e.key==='ArrowRight')mgo(1);
+  if(e.key==='ArrowLeft')mgo(-1);
+  if(e.key===' '){e.preventDefault();toggleAutoPlay();}
+  if(e.key==='f'||e.key==='F')toggleFullscreen();
+});
+</script>
+
 </body>
 </html>
