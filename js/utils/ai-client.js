@@ -47,6 +47,36 @@ const AI_CLIENT = {
         .trim();
       return JSON.parse(clean);
     } catch (e) {
+      // Try to fix truncated JSON by finding last complete object
+      try {
+        const clean = text
+          .replace(/^```json\n?/m, '')
+          .replace(/^```\n?/m, '')
+          .replace(/```$/m, '')
+          .trim();
+        
+        // Find the last valid closing brace
+        let fixed = clean;
+        
+        // Count open/close braces to find truncation point
+        let depth = 0;
+        let lastValidEnd = 0;
+        for (let i = 0; i < fixed.length; i++) {
+          if (fixed[i] === '{') depth++;
+          if (fixed[i] === '}') {
+            depth--;
+            if (depth === 0) lastValidEnd = i;
+          }
+        }
+        
+        if (lastValidEnd > 0) {
+          fixed = fixed.substring(0, lastValidEnd + 1);
+          return JSON.parse(fixed);
+        }
+      } catch (e2) {
+        // Both attempts failed
+      }
+      
       console.error('JSON parse error:', e, 'Raw text:', text);
       throw new Error('AI returned an unexpected format. Please try again.');
     }
