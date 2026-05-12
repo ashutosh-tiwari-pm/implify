@@ -1,11 +1,11 @@
 // ============================================
-// AI Client — Claude API wrapper
-// Used by all 5 phases
+// AI Client — Claude API via Vercel Proxy
+// Proxied to avoid CORS issues in browser
 // ============================================
 
 const AI_CLIENT = {
 
-  // ── Core API call ──
+  // ── Core API call (goes through /api/claude proxy) ──
   async call(systemPrompt, userPrompt, maxTokens = 4000) {
     const apiKey = localStorage.getItem('aim_api_key');
     const model = localStorage.getItem('aim_model') || 'claude-haiku-4-5-20251001';
@@ -14,15 +14,13 @@ const AI_CLIENT = {
       throw new Error('No API key found. Please add your Claude API key in Settings.');
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/api/claude', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-client-side-api-key-flag': 'true'
       },
       body: JSON.stringify({
+        apiKey,
         model,
         max_tokens: maxTokens,
         system: systemPrompt,
@@ -32,7 +30,7 @@ const AI_CLIENT = {
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.error?.message || `API error: ${response.status}`);
+      throw new Error(err.error || `API error: ${response.status}`);
     }
 
     const data = await response.json();
@@ -42,7 +40,6 @@ const AI_CLIENT = {
   // ── Parse JSON response safely ──
   parseJSON(text) {
     try {
-      // Strip markdown code blocks if present
       const clean = text
         .replace(/^```json\n?/m, '')
         .replace(/^```\n?/m, '')
