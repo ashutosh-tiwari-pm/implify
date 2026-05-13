@@ -2,6 +2,9 @@
   "name": "ai-implementation-manager",
   "version": "1.0.0",
   "description": "AI-powered implementation planning for B2B SaaS teams",
+  "engines": {
+    "node": ">=18.x"
+  },
   "dependencies": {
     "pptxgenjs": "^3.12.0"
   }

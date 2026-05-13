@@ -1,9 +1,13 @@
 // ============================================
 // Vercel API: Generate Kickoff Deck (PPTX)
-// CommonJS for Vercel serverless compatibility
 // ============================================
 
-const PptxGenJS = require('pptxgenjs');
+let PptxGenJS;
+try {
+  PptxGenJS = require('pptxgenjs');
+} catch (e) {
+  console.error('Failed to load pptxgenjs:', e.message);
+}
 
 // ── Color Palette ──
 const C = {
@@ -51,6 +55,10 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
+    if (!PptxGenJS) {
+      return res.status(500).json({ error: 'pptxgenjs not loaded - check Vercel dependencies' });
+    }
+
     const { clientIntelligence: ci, solutionContext: sc, scopeAnalysis: sa, implementationPlan: ip } = req.body;
 
     const pres = new PptxGenJS();

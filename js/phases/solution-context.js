@@ -9,6 +9,7 @@ const PHASE_SOLUTION_CONTEXT = {
 Your task is to analyze a SaaS solution and map it to a specific client's needs.
 
 Return ONLY valid JSON. No markdown, no explanation. Just the JSON object.
+Be CONCISE — limit arrays to maximum 5 items each to avoid truncation.
 
 Return this exact structure:
 {
@@ -17,15 +18,15 @@ Return this exact structure:
   "relevant_modules": [
     {
       "name": "module name",
-      "description": "what it does",
-      "relevance_to_client": "why this matters for this client",
+      "description": "what it does (1 sentence)",
+      "relevance_to_client": "why this matters (1 sentence)",
       "priority": "Must Have/Should Have/Nice to Have"
     }
   ],
   "fit_assessment": {
     "overall_fit": "Strong/Good/Moderate/Weak",
     "fit_score": "1-10",
-    "fit_rationale": "explanation of fit",
+    "fit_rationale": "2-3 sentence explanation",
     "key_value_drivers": ["value1", "value2", "value3"]
   },
   "integration_requirements": [
@@ -33,17 +34,17 @@ Return this exact structure:
       "system": "system name",
       "type": "API/File/Database/Manual",
       "complexity": "Low/Medium/High",
-      "notes": "integration notes"
+      "notes": "brief notes"
     }
   ],
   "customization_needs": {
     "level": "Standard/Moderate/Heavy",
-    "description": "what customization is needed",
-    "items": ["customization1", "customization2"]
+    "description": "brief description",
+    "items": ["item1", "item2", "item3"]
   },
   "data_requirements": {
     "migration_needed": "yes/no",
-    "data_types": ["data type1", "data type2"],
+    "data_types": ["type1", "type2"],
     "estimated_volume": "description",
     "migration_complexity": "Low/Medium/High"
   },
@@ -57,8 +58,8 @@ Return this exact structure:
   ],
   "implementation_approach": {
     "recommended_methodology": "Phased/Big Bang/Pilot",
-    "rationale": "why this approach",
-    "key_dependencies": ["dependency1", "dependency2"]
+    "rationale": "brief rationale",
+    "key_dependencies": ["dep1", "dep2"]
   }
 }`,
 
@@ -83,7 +84,7 @@ ${clientContext}
 
 Provide a detailed solution-client fit analysis including relevant modules, integration requirements, customization needs, and success metrics tailored to this specific client.`;
 
-    const result = await AI_CLIENT.callJSON(this.SYSTEM_PROMPT, userPrompt, 4000);
+    const result = await AI_CLIENT.callJSON(this.SYSTEM_PROMPT, userPrompt, 6000);
     await this.save(projectId, result, solutionName);
     return result;
   },

@@ -11,12 +11,28 @@ let phaseData = {
   scope_analysis: null
 };
 
+// ── DEMO DATA ──
+const DEMO_PROJECT = {
+  id: 'demo',
+  client_name: 'TechFlow Solutions',
+  client_url: 'https://techflowsolutions.com',
+  product_name: 'Salesforce Sales Cloud',
+  created_at: new Date().toISOString(),
+  status: 'active'
+};
+
+const IS_DEMO = new URLSearchParams(location.search).get('demo') === 'true';
+
 // ── Initialize ──
 document.addEventListener('DOMContentLoaded', async () => {
+  if (IS_DEMO) {
+    initDemoMode();
+    return;
+  }
+
   const session = await requireAuth();
   if (!session) return;
 
-  // Get project ID from URL
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('id');
 
@@ -25,7 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Check API key
   if (!localStorage.getItem('aim_api_key')) {
     showToast('Please add your Claude API key in Settings first', 'error');
     setTimeout(() => window.location.href = 'dashboard.html', 2000);
@@ -37,8 +52,57 @@ document.addEventListener('DOMContentLoaded', async () => {
   switchTab('client-intelligence');
 });
 
+async function initDemoMode() {
+  // Inject demo banner
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#1E40AF,#4338CA);color:#fff;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;font-size:.875rem;font-family:system-ui,sans-serif';
+  banner.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="background:rgba(255,255,255,.2);padding:2px 10px;border-radius:99px;font-size:.75rem;font-weight:700;letter-spacing:.05em">DEMO</span>
+      <span style="opacity:.9">Live demo — TechFlow Solutions · Salesforce Sales Cloud · $485K implementation</span>
+    </div>
+    <a href="login.html?mode=signup" style="background:#fff;color:#1E40AF;padding:6px 16px;border-radius:7px;font-weight:700;text-decoration:none;font-size:.8125rem">Create free account →</a>`;
+  document.body.prepend(banner);
+  document.body.style.paddingTop = '44px';
+
+  // Set demo project data
+  project = DEMO_PROJECT;
+  projectId = 'demo';
+
+  // Set fake API key for demo
+  const existingKey = localStorage.getItem('aim_api_key');
+
+  // Populate UI
+  const clientEl = document.getElementById('project-client');
+  if (clientEl) clientEl.textContent = DEMO_PROJECT.client_name;
+  const inputEl = document.getElementById('input-client-name');
+  if (inputEl) inputEl.value = DEMO_PROJECT.client_name;
+  const urlEl = document.getElementById('input-client-url');
+  if (urlEl) urlEl.value = DEMO_PROJECT.client_url;
+
+  switchTab('client-intelligence');
+
+  // If no API key, prompt for one with helpful message
+  if (!existingKey) {
+    setTimeout(() => {
+      const key = prompt('To see AI-generated results, enter your Claude API key:\n(Free at console.anthropic.com — takes 2 min)\n\nOr press Cancel to browse the demo UI without running AI.');
+      if (key && key.startsWith('sk-')) {
+        localStorage.setItem('aim_api_key', key);
+        showToast('API key saved — click any phase to generate results', 'success');
+      }
+    }, 800);
+  }
+}
+
 // ── Load Project ──
 async function loadProject() {
+  if (IS_DEMO) {
+    project = DEMO_PROJECT;
+    const clientEl = document.getElementById('project-client');
+    if (clientEl) clientEl.textContent = project.client_name;
+    return;
+  }
+
   const { data, error } = await supabaseClient
     .from('projects')
     .select('*')
