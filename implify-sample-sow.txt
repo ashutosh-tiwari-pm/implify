@@ -1,0 +1,220 @@
+STATEMENT OF WORK
+CRM PLATFORM IMPLEMENTATION — TECHFLOW SOLUTIONS
+
+Prepared by: Salesforce Professional Services
+Client: TechFlow Solutions Inc.
+Date: March 1, 2026
+SOW Reference: SF-PS-2026-0847
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. EXECUTIVE SUMMARY
+
+TechFlow Solutions Inc. ("Client") has engaged Salesforce Professional Services ("Provider") to implement Salesforce Sales Cloud Enterprise across the Client's North America and EMEA sales operations. This engagement covers the full implementation lifecycle including discovery, configuration, data migration, integration, user training, and go-live support.
+
+Total contract value: $485,000
+Estimated implementation timeline: 16 weeks
+Go-live target: June 30, 2026
+Primary sponsor: Sarah Chen, VP of Sales Operations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. CLIENT BACKGROUND
+
+TechFlow Solutions is a Series C B2B SaaS company headquartered in Austin, Texas with offices in London and Singapore. Founded in 2019, TechFlow provides supply chain visibility software to mid-market manufacturers across North America and Europe.
+
+Current state:
+- 340 employees, 87 in sales and sales operations
+- $42M ARR, targeting $65M by end of FY2026
+- Currently using HubSpot CRM (legacy, 4 years of data)
+- Spreadsheet-based forecasting and pipeline management
+- No formal CPQ process; quoting done manually in Excel
+- Separate instances for NA and EMEA teams with no unified view
+- Compliance requirements: SOC 2 Type II, GDPR, Illinois BIPA
+
+Key stakeholders:
+- Sarah Chen — VP Sales Operations (Executive Sponsor)
+- Marcus Rodriguez — Director of IT (Technical Lead)
+- Priya Patel — Head of Revenue Operations (Business Lead)
+- James Whitfield — Sales Director EMEA
+- Compliance: Legal team review required for all data flows
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. SCOPE OF WORK
+
+3.1 IN SCOPE
+
+Phase 1 — Discovery & Design (Weeks 1-3)
+- Current state assessment and process documentation
+- Future state design workshops (3 sessions × 4 hours)
+- Data audit of HubSpot export (estimated 47,000 contact records, 12,000 accounts, 8,500 opportunities)
+- Technical architecture design
+- Integration requirements documentation
+
+Phase 2 — Configuration (Weeks 4-8)
+- Sales Cloud setup: Lead, Contact, Account, Opportunity objects
+- Custom fields: 34 agreed custom fields across objects
+- Page layouts and record types (NA and EMEA variants)
+- Opportunity stages mapped to TechFlow's 7-stage pipeline
+- Product catalog setup (142 SKUs)
+- Basic CPQ configuration (standard pricing rules, no complex bundling)
+- Territory management: 12 NA territories, 6 EMEA territories
+- Role hierarchy and sharing rules
+- Reports and dashboards: 22 standard reports, 8 executive dashboards
+- Email templates: 15 sales templates
+
+Phase 3 — Data Migration (Weeks 6-9, overlapping)
+- HubSpot to Salesforce data mapping
+- Data cleansing and deduplication
+- Test migration (2 rounds)
+- Production migration
+- Data validation sign-off
+
+Phase 4 — Integrations (Weeks 7-11)
+- Outreach.io (sales engagement) — bi-directional sync
+- Gong (call intelligence) — activity logging to Salesforce
+- NetSuite (ERP) — closed-won opportunity to order creation
+- DocuSign — contract execution from opportunity
+- Slack — deal alert notifications
+
+Phase 5 — Training & Go-Live (Weeks 12-16)
+- Admin training: 2 days for Marcus Rodriguez + 2 internal admins
+- Sales rep training: 4 sessions × 90 minutes (cohorts by region)
+- Manager and executive training: 1 session × 2 hours
+- Train-the-trainer for Sales Operations
+- Hypercare support: 30 days post go-live (response SLA: 4 hours)
+- Documentation: Admin guide, user guide, integration runbook
+
+3.2 OUT OF SCOPE
+- Salesforce Marketing Cloud (separate engagement)
+- Advanced CPQ (product bundles, complex pricing tiers)
+- Custom mobile application development
+- Data from systems other than HubSpot
+- Third-party AppExchange installations beyond listed integrations
+- Ongoing managed services post hypercare period
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. DELIVERABLES
+
+4.1 Documentation
+- Current State Assessment Report
+- Future State Design Document
+- Data Migration Plan and Mapping Specification
+- Integration Architecture Document
+- Test Plan and UAT Scripts
+- Training Materials (Admin + User)
+- Runbooks for all 4 integrations
+- Post Go-Live Support Plan
+
+4.2 Technical Deliverables
+- Configured Salesforce org (sandbox + production)
+- Migrated and validated data
+- 4 live integrations
+- 22 reports and 8 dashboards
+- 15 email templates
+
+4.3 Project Management
+- Weekly status reports every Friday by 5pm CT
+- RAID log (Risks, Assumptions, Issues, Dependencies) — updated weekly
+- Project schedule in Smartsheet (shared access)
+- Change request process: any scope change requires written CR within 48 hours of identification
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. TIMELINE AND MILESTONES
+
+Week 1:  Kickoff meeting · discovery sessions begin
+Week 2:  Current state assessment complete
+Week 3:  Future state design approved by Sarah Chen
+Week 4:  Configuration begins · HubSpot data export received
+Week 6:  First test migration · integration development begins
+Week 8:  Configuration complete · UAT begins
+Week 9:  Data validation sign-off · second test migration
+Week 10: UAT complete · client sign-off required
+Week 11: Integrations tested and approved
+Week 12: Training begins
+Week 14: Production migration complete
+Week 16: Go-live · hypercare begins
+Week 20: Hypercare ends · project close
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. DEPENDENCIES AND ASSUMPTIONS
+
+6.1 Client Dependencies
+- HubSpot data export must be provided by end of Week 3
+- Client to provide 3 named admins with Salesforce system administrator access
+- Client stakeholders must be available for workshops (Sarah Chen, Marcus Rodriguez, Priya Patel minimum)
+- NetSuite API credentials and sandbox access required by Week 6
+- Legal review of data processing addendum must complete by Week 4
+- Change freeze on HubSpot: no new records after Week 12
+
+6.2 Assumptions
+- Salesforce licenses already purchased (87 Enterprise licenses confirmed)
+- Client IT team handles SSO/SAML configuration (Okta)
+- GDPR data mapping for EU customer records to be provided by Client legal team
+- Outreach.io contract renewed before integration phase begins
+- Exchange rates for EMEA reporting locked at implementation start
+
+6.3 Known Risks
+- HubSpot data quality: preliminary audit suggests 23% duplicate rate in contacts — deduplication may take longer than estimated
+- EMEA data residency: Client legal team has not confirmed EU data storage requirements — may require Frankfurt region org
+- NetSuite version: Client running NetSuite 2022.1 — integration approach TBD pending API review
+- Key person risk: Marcus Rodriguez sole technical contact; escalation path needed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7. FEES AND PAYMENT
+
+Professional services: $420,000
+  - Phase 1 (Discovery): $55,000
+  - Phase 2 (Configuration): $140,000
+  - Phase 3 (Data Migration): $75,000
+  - Phase 4 (Integrations): $95,000
+  - Phase 5 (Training & Go-Live): $55,000
+
+Expenses (travel, accommodation): Not to exceed $15,000
+Hypercare (30 days): $50,000
+
+Payment schedule:
+  - 25% on SOW execution ($121,250)
+  - 25% on Phase 2 completion ($121,250)
+  - 25% on UAT sign-off ($121,250)
+  - 25% on go-live ($121,250)
+  - Hypercare invoiced monthly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8. ACCEPTANCE CRITERIA
+
+Go-live readiness requires written sign-off from Sarah Chen on:
+- All 87 users can log in and access role-appropriate data
+- 95% of migrated records validated against HubSpot source
+- All 4 integrations passing integration tests
+- 80% of sales reps completing training (attendance tracked)
+- Executive dashboards showing live pipeline data
+- Zero Severity 1 open defects at go-live
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+9. CHANGE MANAGEMENT
+
+Any changes to scope, timeline, or budget require:
+1. Change Request form submitted within 48 hours of identification
+2. Impact assessment (effort, cost, timeline) within 5 business days
+3. Written approval from Sarah Chen and Provider engagement manager
+4. SOW amendment executed before additional work begins
+
+Verbal approvals are not binding. Time and materials for unauthorised scope will not be invoiced but work will cease until formal CR is approved.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SIGNATURES
+
+Provider: _________________________ Date: ________
+Salesforce Professional Services
+
+Client: ___________________________ Date: ________
+Sarah Chen, VP Sales Operations, TechFlow Solutions Inc.
